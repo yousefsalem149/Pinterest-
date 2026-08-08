@@ -240,6 +240,15 @@
   .empty{
     text-align:center; padding:80px 20px; color:#8a8878;
   }
+  .empty-suggest{
+    display:flex; gap:8px; justify-content:center; flex-wrap:wrap;
+    margin-top:18px;
+  }
+  .empty-suggest button{
+    padding:8px 16px; border-radius:999px; border:1.5px solid var(--line);
+    background:#fff; font-size:13px; font-weight:600; cursor:pointer; color:var(--teal-deep);
+  }
+  .empty-suggest button:hover{border-color:var(--teal);}
 
   /* ---------- MODAL ---------- */
   .modal-bg{
@@ -302,7 +311,7 @@
 </header>
 
 <div class="hero">
-  <div class="tape">+40,000 صورة قابلة للتصفح</div>
+  <div class="tape">صور بلا نهاية — تمرير مستمر</div>
   <h1>لوحتك، بلا حدود</h1>
   <p>اجمع كل ما يلهمك من الطبيعة إلى العمارة، من الطعام إلى الفن — كل ذلك في مكان واحد.</p>
 </div>
@@ -310,7 +319,10 @@
 <main>
   <div class="grid" id="grid"></div>
   <div class="loader" id="loader"><span class="dot"></span><span class="dot"></span><span class="dot"></span> جارٍ تحميل المزيد</div>
-  <div class="empty" id="emptyMsg" style="display:none;">لا نتائج مطابقة لبحثك</div>
+  <div class="empty" id="emptyMsg" style="display:none;">
+    <div id="emptyText">لا نتائج مطابقة لبحثك</div>
+    <div class="empty-suggest" id="emptySuggest"></div>
+  </div>
 </main>
 
 <div class="modal-bg" id="modalBg">
@@ -329,61 +341,93 @@
 <script>
 /* ---------------- CATEGORIES ---------------- */
 const CATEGORIES = [
-  {key:"nature",   label:"طبيعة",     seed:"nature",   words:["جبل هادئ","غابة كثيفة","شروق الشمس","بحيرة صافية","وادٍ أخضر"]},
-  {key:"architecture", label:"عمارة", seed:"arch",     words:["واجهة معمارية","سلم حلزوني","مبنى زجاجي","تفاصيل معمارية","خط أفق المدينة"]},
-  {key:"fashion",  label:"أزياء",     seed:"fashion",  words:["إطلالة أنيقة","تنسيق خريفي","إكسسوارات مختارة","نمط الشارع","ألوان الموسم"]},
-  {key:"food",     label:"طعام",      seed:"food",     words:["طبق شهي","نكهات منزلية","مائدة دافئة","حلوى فاخرة","وصفة سريعة"]},
-  {key:"travel",   label:"سفر",       seed:"travel",   words:["وجهة الحلم","طريق مفتوح","مدينة عتيقة","شاطئ منعزل","رحلة استكشاف"]},
-  {key:"art",      label:"فن",        seed:"art",      words:["لوحة تجريدية","خط فني","نحت معاصر","ألوان مائية","تركيب بصري"]},
-  {key:"tech",     label:"تقنية",     seed:"tech",     words:["تصميم مستقبلي","واجهة أنيقة","إضاءة رقمية","أدوات ذكية","تفاصيل دقيقة"]},
-  {key:"animals",  label:"حيوانات",   seed:"animals",  words:["كائن بري","لحظة عفوية","في موطنه الطبيعي","تفاصيل نادرة","حركة حيوية"]},
-  {key:"fitness",  label:"رياضة",     seed:"fitness",  words:["طاقة الصباح","تمرين مركّز","لياقة يومية","توازن وقوة","نمط نشط"]},
-  {key:"interior", label:"ديكور",     seed:"interior", words:["ركن هادئ","تصميم دافئ","مساحة بسيطة","ضوء طبيعي","تفاصيل منزلية"]},
+  {key:"nature", label:"طبيعة", seed:"nature",
+    words:["جبل هادئ","غابة كثيفة","شروق الشمس","بحيرة صافية","وادٍ أخضر","شلال منعزل","حقل أزهار","غروب الشمس","نهر جبلي","سماء ملبدة"],
+    synonyms:["nature","طبيعة","جبل","mountain","غابة","forest","شجر","tree","بحيرة","lake","بحر","sea","سماء","sky","شلال","waterfall","وادي","valley","نهر","river","زهور","flower","شروق","sunrise","غروب","sunset","منظر طبيعي","landscape"]},
+  {key:"architecture", label:"عمارة", seed:"arch",
+    words:["واجهة معمارية","سلم حلزوني","مبنى زجاجي","تفاصيل معمارية","خط أفق المدينة","قوس حجري","برج شاهق","نافذة كلاسيكية","ممر مقنطر","جسر معلق"],
+    synonyms:["architecture","عمارة","مبنى","building","بيت","house","برج","tower","جسر","bridge","مدينة","city","شارع","street","نافذة","window","سلم","stairs","قصر","palace","مسجد","mosque","كنيسة","church"]},
+  {key:"fashion", label:"أزياء", seed:"fashion",
+    words:["إطلالة أنيقة","تنسيق خريفي","إكسسوارات مختارة","نمط الشارع","ألوان الموسم","حذاء كلاسيكي","حقيبة يد","نظارة شمسية","معطف شتوي","فستان صيفي"],
+    synonyms:["fashion","أزياء","ملابس","clothes","حذاء","shoes","حقيبة","bag","نظارة","glasses","فستان","dress","موضة","style","إكسسوارات","accessories","عطر","perfume","مجوهرات","jewelry"]},
+  {key:"food", label:"طعام", seed:"food",
+    words:["طبق شهي","نكهات منزلية","مائدة دافئة","حلوى فاخرة","وصفة سريعة","قهوة الصباح","خبز طازج","سلطة صحية","حساء دافئ","فطور شهي"],
+    synonyms:["food","طعام","أكل","اكل","وجبة","meal","قهوة","coffee","حلوى","dessert","cake","كيك","خبز","bread","فطور","breakfast","عشاء","dinner","سلطة","salad","مطبخ","kitchen","وصفة","recipe","فواكه","fruit"]},
+  {key:"travel", label:"سفر", seed:"travel",
+    words:["وجهة الحلم","طريق مفتوح","مدينة عتيقة","شاطئ منعزل","رحلة استكشاف","مطار دولي","خريطة سفر","حقيبة سفر","فندق فاخر","قارب شراعي"],
+    synonyms:["travel","سفر","رحلة","trip","شاطئ","beach","فندق","hotel","مطار","airport","خريطة","map","جزيرة","island","صحراء","desert","استكشاف","explore","سياحة","tourism"]},
+  {key:"art", label:"فن", seed:"art",
+    words:["لوحة تجريدية","خط فني","نحت معاصر","ألوان مائية","تركيب بصري","رسم بالفحم","فن الشارع","معرض فني","تصميم جرافيك","خزف يدوي"],
+    synonyms:["art","فن","رسم","painting","لوحة","canvas","نحت","sculpture","خط عربي","calligraphy","ألوان","colors","تصميم","design","معرض","gallery","جرافيك","graphic"]},
+  {key:"tech", label:"تقنية", seed:"tech",
+    words:["تصميم مستقبلي","واجهة أنيقة","إضاءة رقمية","أدوات ذكية","تفاصيل دقيقة","لوحة مفاتيح","حاسوب محمول","هاتف ذكي","دائرة إلكترونية","روبوت آلي"],
+    synonyms:["tech","technology","تقنية","تكنولوجيا","حاسوب","computer","لابتوب","laptop","هاتف","phone","روبوت","robot","ذكاء اصطناعي","ai","برمجة","code","شاشة","screen"]},
+  {key:"animals", label:"حيوانات", seed:"animals",
+    words:["كائن بري","لحظة عفوية","في موطنه الطبيعي","تفاصيل نادرة","حركة حيوية","قط منزلي","كلب وفي","طائر مهاجر","حصان أصيل","أسد ملكي"],
+    synonyms:["animals","حيوانات","حيوان","animal","قطة","cat","كلب","dog","طائر","bird","أسد","lion","حصان","horse","سمك","fish","حديقة حيوان","zoo"]},
+  {key:"fitness", label:"رياضة", seed:"fitness",
+    words:["طاقة الصباح","تمرين مركّز","لياقة يومية","توازن وقوة","نمط نشط","جري صباحي","يوغا هادئة","رفع أثقال","سباحة منتظمة","دراجة هوائية"],
+    synonyms:["fitness","رياضة","تمرين","exercise","جري","running","يوغا","yoga","أثقال","weights","سباحة","swimming","دراجة","bike","صحة","health","جيم","gym"]},
+  {key:"interior", label:"ديكور", seed:"interior",
+    words:["ركن هادئ","تصميم دافئ","مساحة بسيطة","ضوء طبيعي","تفاصيل منزلية","غرفة معيشة","مطبخ عصري","غرفة نوم","حديقة منزلية","إضاءة دافئة"],
+    synonyms:["interior","ديكور","منزل","home","غرفة","room","أثاث","furniture","مطبخ","kitchen","غرفة نوم","bedroom","غرفة معيشة","living room","تصميم داخلي","design"]},
 ];
-const PER_CATEGORY_MAX = 4000; // 10 categories × 4000 ≈ 40,000
 const BATCH_SIZE = 28;
 
 let activeCat = "all";
 let searchTerm = "";
 let savedIds = new Set();
-let renderedCount = 0;
-let itemPool = [];   // filtered pool being paged through
-let poolCursor = 0;
 
-/* deterministic pseudo-random so aspect ratios stay stable per id */
+/* ---- infinite generation state ---- */
+let activeCats = [];          // categories currently matching filter/search
+let catCursor = 0;            // round-robin pointer into activeCats
+let counters = {};            // per-category generation index, grows forever
+
 function seededRand(seed){
   let x = Math.sin(seed) * 10000;
   return x - Math.floor(x);
 }
 
-function buildFullPool(){
-  const pool = [];
-  CATEGORIES.forEach((cat, ci) => {
-    for(let i=0; i<PER_CATEGORY_MAX; i++){
-      const gid = ci * PER_CATEGORY_MAX + i;
-      const ar = [ [3,4],[1,1],[4,5],[2,3],[3,2] ][Math.floor(seededRand(gid)*5)];
-      pool.push({
-        id: gid,
-        cat: cat.key,
-        catLabel: cat.label,
-        title: cat.words[i % cat.words.length] + " #" + (i+1),
-        seed: cat.seed + "-" + i,
-        arW: ar[0], arH: ar[1]
-      });
-    }
-  });
-  return pool;
+function buildItem(cat, i){
+  const gid = i; // unique per category+index, unbounded
+  const ar = [ [3,4],[1,1],[4,5],[2,3],[3,2] ][Math.floor(seededRand(gid + cat.key.length*7919)*5)];
+  return {
+    id: cat.key + "-" + i,
+    cat: cat.key,
+    catLabel: cat.label,
+    title: cat.words[i % cat.words.length] + " #" + (i+1),
+    seed: cat.seed + "-" + i,
+    arW: ar[0], arH: ar[1]
+  };
 }
-const FULL_POOL = buildFullPool();
 
-function getFilteredPool(){
-  return FULL_POOL.filter(item=>{
-    const matchCat = activeCat === "all" || item.cat === activeCat;
-    const matchSearch = !searchTerm ||
-      item.catLabel.includes(searchTerm) ||
-      item.title.includes(searchTerm);
-    return matchCat && matchSearch;
-  });
+/* normalize: lowercase + strip Arabic diacritics/alef variants for forgiving matching */
+function normalize(str){
+  return str
+    .toLowerCase()
+    .replace(/[\u064B-\u0652]/g,"")      // diacritics
+    .replace(/[إأآا]/g,"ا")
+    .replace(/ى/g,"ي")
+    .replace(/ة/g,"ه")
+    .trim();
+}
+
+/* which categories match current filter (activeCat) + free-text search */
+function computeActiveCategories(){
+  let cats = CATEGORIES;
+  if(activeCat !== "all"){
+    cats = cats.filter(c => c.key === activeCat);
+  }
+  if(searchTerm){
+    const n = normalize(searchTerm);
+    cats = cats.filter(cat=>{
+      if(normalize(cat.label).includes(n)) return true;
+      if(cat.synonyms.some(s => normalize(s).includes(n) || n.includes(normalize(s)))) return true;
+      if(cat.words.some(w => normalize(w).includes(n))) return true;
+      return false;
+    });
+  }
+  return cats;
 }
 
 /* ---------------- NAV PILLS ---------------- */
@@ -419,7 +463,14 @@ searchInput.addEventListener('input', e=>{
   searchTimer = setTimeout(()=>{
     searchTerm = e.target.value.trim();
     resetGrid();
-  }, 250);
+  }, 200);
+});
+searchInput.addEventListener('keydown', e=>{
+  if(e.key === 'Enter'){
+    clearTimeout(searchTimer);
+    searchTerm = e.target.value.trim();
+    resetGrid();
+  }
 });
 
 /* ---------------- GRID RENDER ---------------- */
@@ -429,10 +480,32 @@ const emptyMsg = document.getElementById('emptyMsg');
 
 function resetGrid(){
   grid.innerHTML = "";
-  itemPool = getFilteredPool();
-  poolCursor = 0;
-  emptyMsg.style.display = itemPool.length ? 'none' : 'block';
-  loader.style.display = itemPool.length ? 'block' : 'none';
+  activeCats = computeActiveCategories();
+  catCursor = 0;
+  counters = {};
+  activeCats.forEach(c => counters[c.key] = 0);
+  const hasResults = activeCats.length > 0;
+  emptyMsg.style.display = hasResults ? 'none' : 'block';
+  loader.style.display = hasResults ? 'block' : 'none';
+  if(!hasResults){
+    document.getElementById('emptyText').textContent =
+      searchTerm ? `لا نتائج لـ "${searchTerm}" — جرّب إحدى الفئات التالية:` : 'لا نتائج مطابقة';
+    const sugg = document.getElementById('emptySuggest');
+    sugg.innerHTML = "";
+    CATEGORIES.forEach(cat=>{
+      const b = document.createElement('button');
+      b.textContent = cat.label;
+      b.onclick = ()=>{
+        searchInput.value = "";
+        searchTerm = "";
+        activeCat = cat.key;
+        [...catsNav.children].forEach(c=>c.classList.remove('active'));
+        [...catsNav.children].find(c=>c.textContent===cat.label)?.classList.add('active');
+        resetGrid();
+      };
+      sugg.appendChild(b);
+    });
+  }
   loadMore();
 }
 
@@ -488,15 +561,19 @@ function toggleSave(id, btn){
 }
 
 function loadMore(){
-  if(poolCursor >= itemPool.length){
+  if(activeCats.length === 0){
     loader.style.display = 'none';
     return;
   }
   loader.style.display = 'block';
-  const slice = itemPool.slice(poolCursor, poolCursor + BATCH_SIZE);
-  slice.forEach(item => grid.appendChild(makeCard(item)));
-  poolCursor += BATCH_SIZE;
-  if(poolCursor >= itemPool.length) loader.style.display = 'none';
+  for(let n=0; n<BATCH_SIZE; n++){
+    const cat = activeCats[catCursor % activeCats.length];
+    const i = counters[cat.key]++;
+    const item = buildItem(cat, i);
+    grid.appendChild(makeCard(item));
+    catCursor++;
+  }
+  // infinite: never stops, loader stays visible to keep triggering more
 }
 
 /* infinite scroll */
@@ -519,7 +596,7 @@ function openModal(item, src){
   modalImg.src = src.replace(/\/\d+\/\d+$/, `/${item.arW*240}/${item.arH*240}`);
   modalTitle.textContent = item.title;
   modalTag.textContent = item.catLabel;
-  modalDesc.textContent = `من مجموعة ${item.catLabel} — إحدى أكثر من ${PER_CATEGORY_MAX.toLocaleString('ar')} صورة في هذا القسم على m&s.`;
+  modalDesc.textContent = `من مجموعة ${item.catLabel} — جزء من مجموعة صور لا نهائية على m&s.`;
   modalSave.textContent = savedIds.has(item.id) ? '✓ محفوظة في لوحتك' : 'حفظ في اللوحة';
   modalSave.classList.toggle('saved', savedIds.has(item.id));
   modalBg.classList.add('open');

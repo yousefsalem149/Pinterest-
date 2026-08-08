@@ -343,6 +343,550 @@
 const CATEGORIES = [
   {key:"nature", label:"طبيعة", seed:"nature",
     words:["جبل هادئ","غابة كثيفة","شروق الشمس","بحيرة صافية","وادٍ أخضر","شلال منعزل","حقل أزهار","غروب الشمس","نهر جبلي","سماء ملبدة"],
+    tags:["mountain","forest","sunrise","lake","valley","waterfall","flowers","sunset","river","clouds"],
+    synonyms:["nature","طبيعة","جبل","mountain","غابة","forest","شجر","tree","بحيرة","lake","بحر","sea","سماء","sky","شلال","waterfall","وادي","valley","نهر","river","زهور","flower","شروق","sunrise","غروب","sunset","منظر طبيعي","landscape"]},
+  {key:"architecture", label:"عمارة", seed:"arch",
+    words:["واجهة معمارية","سلم حلزوني","مبنى زجاجي","تفاصيل معمارية","خط أفق المدينة","قوس حجري","برج شاهق","نافذة كلاسيكية","ممر مقنطر","جسر معلق"],
+    tags:["architecture","staircase","glassbuilding","architecturedetail","cityskyline","archway","skyscraper","window","corridor","bridge"],
+    synonyms:["architecture","عمارة","مبنى","building","بيت","house","برج","tower","جسر","bridge","مدينة","city","شارع","street","نافذة","window","سلم","stairs","قصر","palace","مسجد","mosque","كنيسة","church"]},
+  {key:"fashion", label:"أزياء", seed:"fashion",
+    words:["إطلالة أنيقة","تنسيق خريفي","إكسسوارات مختارة","نمط الشارع","ألوان الموسم","حذاء كلاسيكي","حقيبة يد","نظارة شمسية","معطف شتوي","فستان صيفي"],
+    tags:["fashion","outfit","accessories","streetstyle","fashioncolor","shoes","handbag","sunglasses","coat","dress"],
+    synonyms:["fashion","أزياء","ملابس","clothes","حذاء","shoes","حقيبة","bag","نظارة","glasses","فستان","dress","موضة","style","إكسسوارات","accessories","عطر","perfume","مجوهرات","jewelry"]},
+  {key:"food", label:"طعام", seed:"food",
+    words:["طبق شهي","نكهات منزلية","مائدة دافئة","حلوى فاخرة","وصفة سريعة","قهوة الصباح","خبز طازج","سلطة صحية","حساء دافئ","فطور شهي"],
+    tags:["food","homecooking","dinnertable","dessert","recipe","coffee","freshbread","salad","soup","breakfast"],
+    synonyms:["food","طعام","أكل","اكل","وجبة","meal","قهوة","coffee","حلوى","dessert","cake","كيك","خبز","bread","فطور","breakfast","عشاء","dinner","سلطة","salad","مطبخ","kitchen","وصفة","recipe","فواكه","fruit"]},
+  {key:"travel", label:"سفر", seed:"travel",
+    words:["وجهة الحلم","طريق مفتوح","مدينة عتيقة","شاطئ منعزل","رحلة استكشاف","مطار دولي","خريطة سفر","حقيبة سفر","فندق فاخر","قارب شراعي"],
+    tags:["traveldestination","openroad","oldtown","beach","exploration","airport","map","travelbag","hotel","sailboat"],
+    synonyms:["travel","سفر","رحلة","trip","شاطئ","beach","فندق","hotel","مطار","airport","خريطة","map","جزيرة","island","صحراء","desert","استكشاف","explore","سياحة","tourism"]},
+  {key:"art", label:"فن", seed:"art",
+    words:["لوحة تجريدية","خط فني","نحت معاصر","ألوان مائية","تركيب بصري","رسم بالفحم","فن الشارع","معرض فني","تصميم جرافيك","خزف يدوي"],
+    tags:["abstractart","calligraphy","sculpture","watercolor","artinstallation","charcoaldrawing","streetart","artgallery","graphicdesign","ceramics"],
+    synonyms:["art","فن","رسم","painting","لوحة","canvas","نحت","sculpture","خط عربي","calligraphy","ألوان","colors","تصميم","design","معرض","gallery","جرافيك","graphic"]},
+  {key:"tech", label:"تقنية", seed:"tech",
+    words:["تصميم مستقبلي","واجهة أنيقة","إضاءة رقمية","أدوات ذكية","تفاصيل دقيقة","لوحة مفاتيح","حاسوب محمول","هاتف ذكي","دائرة إلكترونية","روبوت آلي"],
+    tags:["futuristicdesign","userinterface","digitallight","smartdevice","macro","keyboard","laptop","smartphone","circuitboard","robot"],
+    synonyms:["tech","technology","تقنية","تكنولوجيا","حاسوب","computer","لابتوب","laptop","هاتف","phone","روبوت","robot","ذكاء اصطناعي","ai","برمجة","code","شاشة","screen"]},
+  {key:"animals", label:"حيوانات", seed:"animals",
+    words:["كائن بري","لحظة عفوية","في موطنه الطبيعي","تفاصيل نادرة","حركة حيوية","قط منزلي","كلب وفي","طائر مهاجر","حصان أصيل","أسد ملكي"],
+    tags:["wildlife","candidmoment","naturalhabitat","animalcloseup","animalmotion","cat","dog","bird","horse","lion"],
+    synonyms:["animals","حيوانات","حيوان","animal","قطة","cat","كلب","dog","طائر","bird","أسد","lion","حصان","horse","سمك","fish","حديقة حيوان","zoo"]},
+  {key:"fitness", label:"رياضة", seed:"fitness",
+    words:["طاقة الصباح","تمرين مركّز","لياقة يومية","توازن وقوة","نمط نشط","جري صباحي","يوغا هادئة","رفع أثقال","سباحة منتظمة","دراجة هوائية"],
+    tags:["morningenergy","workout","dailyfitness","strengthbalance","activelifestyle","running","yoga","weightlifting","swimming","cycling"],
+    synonyms:["fitness","رياضة","تمرين","exercise","جري","running","يوغا","yoga","أثقال","weights","سباحة","swimming","دراجة","bike","صحة","health","جيم","gym"]},
+  {key:"interior", label:"ديكور", seed:"interior",
+    words:["ركن هادئ","تصميم دافئ","مساحة بسيطة","ضوء طبيعي","تفاصيل منزلية","غرفة معيشة","مطبخ عصري","غرفة نوم","حديقة منزلية","إضاءة دافئة"],
+    tags:["cozycorner","warminterior","minimalspace","naturallight","homedetail","livingroom","modernkitchen","bedroom","homegarden","warmlighting"],
+    synonyms:["interior","ديكور","منزل","home","غرفة","room","أثاث","furniture","مطبخ","kitchen","غرفة نوم","bedroom","غرفة معيشة","living room","تصميم داخلي","design"]},
+];
+const BATCH_SIZE = 28;
+
+let activeCat = "all";
+let searchTerm = "";
+let savedIds = new Set();
+
+/* ---- infinite generation state ---- */
+let activeCats = [];          // categories currently matching filter/search
+let catCursor = 0;            // round-robin pointer into activeCats
+let counters = {};            // per-category generation index, grows forever
+
+function seededRand(seed){
+  let x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+}
+
+function hashCode(str){
+  let h = 0;
+  for(let i=0;i<str.length;i++){ h = (h*31 + str.charCodeAt(i)) | 0; }
+  return Math.abs(h);
+}
+
+function buildItem(cat, i){
+  const gid = i;
+  const ar = [ [3,4],[1,1],[4,5],[2,3],[3,2] ][Math.floor(seededRand(gid + cat.key.length*7919)*5)];
+  const tag = cat.tags[i % cat.tags.length];
+  const id = cat.key + "-" + i;
+  return {
+    id,
+    cat: cat.key,
+    catLabel: cat.label,
+    title: cat.words[i % cat.words.length] + " #" + (i+1),
+    flickrTag: tag,
+    lock: hashCode(id),
+    arW: ar[0], arH: ar[1]
+  };
+}
+
+function imgUrl(item, scale){
+  const w = item.arW * scale, h = item.arH * scale;
+  return `https://loremflickr.com/${w}/${h}/${item.flickrTag}?lock=${item.lock}`;
+}
+
+/* normalize: lowercase + strip Arabic diacritics/alef variants for forgiving matching */
+function normalize(str){
+  return str
+    .toLowerCase()
+    .replace(/[\u064B-\u0652]/g,"")      // diacritics
+    .replace(/[إأآا]/g,"ا")
+    .replace(/ى/g,"ي")
+    .replace(/ة/g,"ه")
+    .trim();
+}
+
+/* which categories match current filter (activeCat) + free-text search */
+function computeActiveCategories(){
+  let cats = CATEGORIES;
+  if(activeCat !== "all"){
+    cats = cats.filter(c => c.key === activeCat);
+  }
+  if(searchTerm){
+    const n = normalize(searchTerm);
+    cats = cats.filter(cat=>{
+      if(normalize(cat.label).includes(n)) return true;
+      if(cat.synonyms.some(s => normalize(s).includes(n) || n.includes(normalize(s)))) return true;
+      if(cat.words.some(w => normalize(w).includes(n))) return true;
+      return false;
+    });
+  }
+  return cats;
+}
+
+/* ---------------- NAV PILLS ---------------- */
+const catsNav = document.getElementById('catsNav');
+function renderPills(){
+  catsNav.innerHTML = "";
+  const allPill = document.createElement('button');
+  allPill.className = 'pill active';
+  allPill.textContent = 'الكل';
+  allPill.onclick = ()=> selectCat('all', allPill);
+  catsNav.appendChild(allPill);
+  CATEGORIES.forEach(cat=>{
+    const p = document.createElement('button');
+    p.className = 'pill';
+    p.textContent = cat.label;
+    p.onclick = ()=> selectCat(cat.key, p);
+    catsNav.appendChild(p);
+  });
+}
+function selectCat(key, el){
+  activeCat = key;
+  [...catsNav.children].forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  resetGrid();
+}
+renderPills();
+
+/* ---------------- SEARCH ---------------- */
+const searchInput = document.getElementById('searchInput');
+let searchTimer;
+searchInput.addEventListener('input', e=>{
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(()=>{
+    searchTerm = e.target.value.trim();
+    resetGrid();
+  }, 200);
+});
+searchInput.addEventListener('keydown', e=>{
+  if(e.key === 'Enter'){
+    clearTimeout(searchTimer);
+    searchTerm = e.target.value.trim();
+    resetGrid();
+  }
+});
+
+/* ---------------- GRID RENDER ---------------- */
+const grid = document.getElementById('grid');
+const loader = document.getElementById('loader');
+const emptyMsg = document.getElementById('emptyMsg');
+
+function resetGrid(){
+  grid.innerHTML = "";
+  activeCats = computeActiveCategories();
+  catCursor = 0;
+  counters = {};
+  activeCats.forEach(c => counters[c.key] = 0);
+  const hasResults = activeCats.length > 0;
+  emptyMsg.style.display = hasResults ? 'none' : 'block';
+  loader.style.display = hasResults ? 'block' : 'none';
+  if(!hasResults){
+    document.getElementById('emptyText').textContent =
+      searchTerm ? `لا نتائج لـ "${searchTerm}" — جرّب إحدى الفئات التالية:` : 'لا نتائج مطابقة';
+    const sugg = document.getElementById('emptySuggest');
+    sugg.innerHTML = "";
+    CATEGORIES.forEach(cat=>{
+      const b = document.createElement('button');
+      b.textContent = cat.label;
+      b.onclick = ()=>{
+        searchInput.value = "";
+        searchTerm = "";
+        activeCat = cat.key;
+        [...catsNav.children].forEach(c=>c.classList.remove('active'));
+        [...catsNav.children].find(c=>c.textContent===cat.label)?.classList.add('active');
+        resetGrid();
+      };
+      sugg.appendChild(b);
+    });
+  }
+  loadMore();
+}
+
+function makeCard(item){
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.style.setProperty('--ar', `${item.arW}/${item.arH}`);
+
+  const img = document.createElement('img');
+  img.loading = 'lazy';
+  img.alt = item.title;
+  img.src = imgUrl(item, 160);
+  img.onload = ()=> img.classList.add('loaded');
+  img.onerror = ()=> { img.classList.add('loaded'); img.style.background = '#e2ded1'; };
+
+  const tag = document.createElement('div');
+  tag.className = 'tag';
+  tag.textContent = item.catLabel;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'overlay';
+  const ot = document.createElement('div');
+  ot.className = 'overlay-title';
+  ot.textContent = item.title;
+  overlay.appendChild(ot);
+
+  const saveBtn = document.createElement('button');
+  saveBtn.className = 'save-btn';
+  saveBtn.textContent = savedIds.has(item.id) ? '✓ محفوظ' : 'حفظ';
+  if(savedIds.has(item.id)) saveBtn.classList.add('saved');
+  saveBtn.onclick = (e)=>{
+    e.stopPropagation();
+    toggleSave(item.id, saveBtn);
+  };
+
+  card.appendChild(img);
+  card.appendChild(tag);
+  card.appendChild(overlay);
+  card.appendChild(saveBtn);
+  card.onclick = ()=> openModal(item);
+  return card;
+}
+
+function toggleSave(id, btn){
+  if(savedIds.has(id)){
+    savedIds.delete(id);
+    if(btn){ btn.textContent='حفظ'; btn.classList.remove('saved'); }
+  } else {
+    savedIds.add(id);
+    if(btn){ btn.textContent='✓ محفوظ'; btn.classList.add('saved'); }
+  }
+  document.getElementById('savedCount').textContent = savedIds.size;
+}
+
+function loadMore(){
+  if(activeCats.length === 0){
+    loader.style.display = 'none';
+    return;
+  }
+  loader.style.display = 'block';
+  for(let n=0; n<BATCH_SIZE; n++){
+    const cat = activeCats[catCursor % activeCats.length];
+    const i = counters[cat.key]++;
+    const item = buildItem(cat, i);
+    grid.appendChild(makeCard(item));
+    catCursor++;
+  }
+  // infinite: never stops, loader stays visible to keep triggering more
+}
+
+/* infinite scroll */
+const sentinelObserver = new IntersectionObserver(entries=>{
+  entries.forEach(en=>{ if(en.isIntersecting) loadMore(); });
+}, {rootMargin:'800px'});
+sentinelObserver.observe(loader);
+
+/* ---------------- MODAL ---------------- */
+const modalBg = document.getElementById('modalBg');
+const modalImg = document.getElementById('modalImg');
+const modalTitle = document.getElementById('modalTitle');
+const modalTag = document.getElementById('modalTag');
+const modalDesc = document.getElementById('modalDesc');
+const modalSave = document.getElementById('modalSave');
+let currentModalItem = null;
+
+function openModal(item){
+  currentModalItem = item;
+  modalImg.src = imgUrl(item, 240);
+  modalTitle.textContent = item.title;
+  modalTag.textContent = item.catLabel;
+  modalDesc.textContent = `من مجموعة ${item.catLabel} — جزء من مجموعة صور لا نهائية على m&s.`;
+  modalSave.textContent = savedIds.has(item.id) ? '✓ محفوظة في لوحتك' : 'حفظ في اللوحة';
+  modalSave.classList.toggle('saved', savedIds.has(item.id));
+  modalBg.classList.add('open');
+}
+modalSave.onclick = ()=>{
+  toggleSave(currentModalItem.id);
+  modalSave.textContent = savedIds.has(currentModalItem.id) ? '✓ محفوظة في لوحتك' : 'حفظ في اللوحة';
+  modalSave.classList.toggle('saved', savedIds.has(currentModalItem.id));
+  const liveBtn = [...grid.children].find(c => c.querySelector('img').alt === currentModalItem.title);
+  if(liveBtn){
+    const b = liveBtn.querySelector('.save-btn');
+    b.textContent = savedIds.has(currentModalItem.id) ? '✓ محفوظ' : 'حفظ';
+    b.classList.toggle('saved', savedIds.has(currentModalItem.id));
+  }
+};
+document.getElementById('modalClose').onclick = ()=> modalBg.classList.remove('open');
+modalBg.onclick = (e)=>{ if(e.target === modalBg) modalBg.classList.remove('open'); };
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') modalBg.classList.remove('open'); });
+
+/* ---------------- INIT ---------------- */
+resetGrid();
+</script>
+</body>
+</html>
+    border-radius:999px;
+    border:1.5px solid var(--line);
+    background:#fff;
+    font-size:13.5px; font-weight:600;
+    cursor:pointer;
+    transition:all .15s;
+    color:var(--ink);
+  }
+  .pill:hover{border-color:var(--teal); color:var(--teal-deep);}
+  .pill.active{
+    background:var(--teal-deep);
+    border-color:var(--teal-deep);
+    color:#fff;
+  }
+
+  /* ---------- HERO STRIP ---------- */
+  .hero{
+    max-width:1500px; margin:0 auto;
+    padding:34px 28px 10px;
+  }
+  .hero h1{
+    font-size:clamp(28px, 4vw, 44px);
+    font-weight:600;
+    margin:0 0 6px;
+    line-height:1.15;
+  }
+  .hero p{
+    margin:0; color:#5b5a53; font-size:15px; max-width:560px;
+  }
+  .hero .tape{
+    display:inline-block;
+    background:var(--mustard);
+    color:var(--teal-deep);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px; font-weight:500;
+    padding:3px 10px;
+    transform:rotate(-2deg);
+    margin-bottom:10px;
+    box-shadow:1px 2px 0 rgba(0,0,0,.08);
+  }
+
+  /* ---------- MASONRY GRID ---------- */
+  main{
+    max-width:1500px; margin:0 auto;
+    padding:18px 22px 80px;
+  }
+  .grid{
+    column-count:2;
+    column-gap:16px;
+  }
+  @media(min-width:560px){ .grid{column-count:3;} }
+  @media(min-width:820px){ .grid{column-count:4;} }
+  @media(min-width:1120px){ .grid{column-count:5;} }
+  @media(min-width:1400px){ .grid{column-count:6;} }
+
+  .card{
+    break-inside:avoid;
+    margin-bottom:16px;
+    position:relative;
+    border-radius:14px;
+    overflow:hidden;
+    background:var(--paper-2);
+    box-shadow:var(--card-shadow);
+    cursor:pointer;
+    opacity:0;
+    animation:fadeIn .5s ease forwards;
+  }
+  @keyframes fadeIn{ to{opacity:1;} }
+  .card img{
+    width:100%; display:block;
+    aspect-ratio: var(--ar, 3/4);
+    object-fit:cover;
+    background:linear-gradient(120deg,#e8e4d8 25%,#f2efe6 37%,#e8e4d8 63%);
+    background-size:400% 100%;
+    animation:shimmer 1.4s infinite;
+  }
+  .card img.loaded{ animation:none; background:none; }
+  @keyframes shimmer{
+    0%{background-position:100% 0;}
+    100%{background-position:0 0;}
+  }
+  .card .tag{
+    position:absolute; top:10px; right:10px;
+    background:rgba(255,255,255,.92);
+    color:var(--teal-deep);
+    font-size:11px; font-weight:700;
+    padding:4px 10px;
+    border-radius:999px;
+    transform:rotate(-3deg);
+  }
+  .card .overlay{
+    position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(19,74,61,0) 55%, rgba(15,25,22,.72) 100%);
+    opacity:0;
+    transition:opacity .2s;
+    display:flex; align-items:flex-end;
+    padding:12px;
+  }
+  .card:hover .overlay{opacity:1;}
+  .card .overlay-title{
+    color:#fff; font-size:13px; font-weight:600;
+    line-height:1.3;
+  }
+  .card .save-btn{
+    position:absolute; top:10px; left:10px;
+    background:var(--teal);
+    color:#fff;
+    border:none;
+    border-radius:999px;
+    padding:8px 14px;
+    font-size:12.5px; font-weight:700;
+    font-family:'Manrope',sans-serif;
+    cursor:pointer;
+    opacity:0;
+    transform:translateY(-6px);
+    transition:all .18s;
+  }
+  .card:hover .save-btn{opacity:1; transform:translateY(0);}
+  .card .save-btn.saved{background:var(--mustard); color:var(--teal-deep);}
+
+  .loader{
+    text-align:center;
+    padding:40px 0;
+    color:#8a8878;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+  }
+  .loader .dot{
+    display:inline-block; width:6px; height:6px; border-radius:50%;
+    background:var(--teal); margin:0 3px;
+    animation:bounce 1s infinite;
+  }
+  .loader .dot:nth-child(2){animation-delay:.15s;}
+  .loader .dot:nth-child(3){animation-delay:.3s;}
+  @keyframes bounce{ 0%,80%,100%{transform:translateY(0); opacity:.4;} 40%{transform:translateY(-5px); opacity:1;} }
+
+  .empty{
+    text-align:center; padding:80px 20px; color:#8a8878;
+  }
+  .empty-suggest{
+    display:flex; gap:8px; justify-content:center; flex-wrap:wrap;
+    margin-top:18px;
+  }
+  .empty-suggest button{
+    padding:8px 16px; border-radius:999px; border:1.5px solid var(--line);
+    background:#fff; font-size:13px; font-weight:600; cursor:pointer; color:var(--teal-deep);
+  }
+  .empty-suggest button:hover{border-color:var(--teal);}
+
+  /* ---------- MODAL ---------- */
+  .modal-bg{
+    position:fixed; inset:0; background:rgba(19,22,20,.7);
+    display:none; align-items:center; justify-content:center;
+    z-index:200; padding:24px;
+  }
+  .modal-bg.open{display:flex;}
+  .modal{
+    background:#fff; border-radius:18px; overflow:hidden;
+    max-width:920px; width:100%; max-height:88vh;
+    display:flex; flex-wrap:wrap;
+    box-shadow:0 30px 60px rgba(0,0,0,.35);
+  }
+  .modal img{
+    width:100%; max-width:480px; object-fit:cover; display:block;
+    max-height:88vh;
+  }
+  .modal-side{
+    flex:1; min-width:260px; padding:26px;
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .modal-title{font-size:22px; font-weight:600;}
+  .modal-tag{
+    align-self:flex-start;
+    background:var(--paper-2); color:var(--teal-deep);
+    padding:5px 12px; border-radius:999px; font-size:12px; font-weight:700;
+  }
+  .modal-desc{color:#5b5a53; font-size:14px; line-height:1.6;}
+  .modal-save{
+    margin-top:auto;
+    background:var(--teal-deep); color:#fff; border:none;
+    padding:13px; border-radius:12px; font-weight:700; font-size:14.5px;
+    cursor:pointer; font-family:'Manrope',sans-serif;
+  }
+  .modal-save.saved{background:var(--mustard); color:var(--teal-deep);}
+  .modal-close{
+    position:absolute; top:16px; left:16px;
+    background:rgba(255,255,255,.9); border:none;
+    width:34px; height:34px; border-radius:50%;
+    font-size:18px; cursor:pointer;
+  }
+  .modal{position:relative;}
+
+  ::selection{background:var(--mustard); color:var(--teal-deep);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="topbar">
+    <div class="logo">m<span class="amp">&amp;</span>s</div>
+    <div class="search-wrap">
+      <input id="searchInput" type="text" placeholder="ابحث عن إلهام… طبيعة، عمارة، أزياء، طعام" />
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    </div>
+    <div class="save-count">محفوظ: <b id="savedCount">0</b></div>
+  </div>
+  <nav class="cats" id="catsNav"></nav>
+</header>
+
+<div class="hero">
+  <div class="tape">صور بلا نهاية — تمرير مستمر</div>
+  <h1>لوحتك، بلا حدود</h1>
+  <p>اجمع كل ما يلهمك من الطبيعة إلى العمارة، من الطعام إلى الفن — كل ذلك في مكان واحد.</p>
+</div>
+
+<main>
+  <div class="grid" id="grid"></div>
+  <div class="loader" id="loader"><span class="dot"></span><span class="dot"></span><span class="dot"></span> جارٍ تحميل المزيد</div>
+  <div class="empty" id="emptyMsg" style="display:none;">
+    <div id="emptyText">لا نتائج مطابقة لبحثك</div>
+    <div class="empty-suggest" id="emptySuggest"></div>
+  </div>
+</main>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <img id="modalImg" src="" alt="">
+    <div class="modal-side">
+      <span class="modal-tag" id="modalTag"></span>
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-desc" id="modalDesc"></div>
+      <button class="modal-save" id="modalSave">حفظ في اللوحة</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------------- CATEGORIES ---------------- */
+const CATEGORIES = [
+  {key:"nature", label:"طبيعة", seed:"nature",
+    words:["جبل هادئ","غابة كثيفة","شروق الشمس","بحيرة صافية","وادٍ أخضر","شلال منعزل","حقل أزهار","غروب الشمس","نهر جبلي","سماء ملبدة"],
     synonyms:["nature","طبيعة","جبل","mountain","غابة","forest","شجر","tree","بحيرة","lake","بحر","sea","سماء","sky","شلال","waterfall","وادي","valley","نهر","river","زهور","flower","شروق","sunrise","غروب","sunset","منظر طبيعي","landscape"]},
   {key:"architecture", label:"عمارة", seed:"arch",
     words:["واجهة معمارية","سلم حلزوني","مبنى زجاجي","تفاصيل معمارية","خط أفق المدينة","قوس حجري","برج شاهق","نافذة كلاسيكية","ممر مقنطر","جسر معلق"],

@@ -9,7 +9,6 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Tajawal', sans-serif; background: #f5f5f5; overflow-x: hidden; }
 
-    /* Header */
     .header {
       position: sticky; top: 0; z-index: 100;
       background: white; border-bottom: 1px solid #e0e0e0;
@@ -53,7 +52,6 @@
     }
     .btn-secondary:hover { background: #e2e2e2; }
 
-    /* Categories */
     .categories {
       position: sticky; top: 65px; z-index: 99;
       background: white; padding: 12px 24px;
@@ -70,7 +68,6 @@
     .cat-btn:hover { background: #ddd; }
     .cat-btn.active { background: #111; color: white; }
 
-    /* Masonry Grid */
     .grid {
       padding: 20px; max-width: 1400px; margin: 0 auto;
       column-count: 2; column-gap: 16px;
@@ -134,7 +131,6 @@
     }
     .pin-meta span { font-size: 12px; color: #767676; }
 
-    /* Loading */
     .loading {
       text-align: center; padding: 40px; display: none;
     }
@@ -146,7 +142,6 @@
     @keyframes spin { to { transform: rotate(360deg); } }
     .loading p { color: #767676; margin-top: 12px; font-size: 14px; }
 
-    /* Lightbox */
     .lightbox {
       display: none; position: fixed; inset: 0;
       background: rgba(0,0,0,0.92); z-index: 200;
@@ -173,7 +168,6 @@
     .lightbox-info h3 { margin: 0 0 4px 0; font-size: 17px; }
     .lightbox-info p { margin: 0; color: #767676; font-size: 13px; }
 
-    /* Mobile */
     @media (max-width: 640px) {
       .header { padding: 10px 14px; gap: 10px; }
       .logo-text { font-size: 20px; }
@@ -273,7 +267,6 @@
       return `https://images.unsplash.com/photo-${getUnsplashId(idx)}?w=400&h=${h}&fit=crop&q=80`;
     }
 
-    // Use deterministic Unsplash IDs for reliability
     function getUnsplashId(idx) {
       const ids = [
         '1515886657613-9f3515b0c78f','1529139574466-a303027c1d8b','1490481651871-32d2e7cd4c63',
@@ -348,14 +341,12 @@
       }, 500);
     }
 
-    // Infinite scroll
     window.addEventListener('scroll', () => {
       if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 600) {
         loadPins(12);
       }
     });
 
-    // Category filter
     document.querySelectorAll('.cat-btn').forEach(btn => {
       btn.addEventListener('click', function() {
         document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
@@ -368,7 +359,6 @@
       });
     });
 
-    // Search
     document.getElementById('searchInput').addEventListener('input', function() {
       const term = this.value.trim().toLowerCase();
       allPins.forEach(pin => {
@@ -376,7 +366,6 @@
       });
     });
 
-    // Lightbox
     function openLightbox(src, title, user) {
       document.getElementById('lightboxImg').src = src;
       document.getElementById('lbTitle').textContent = title;
@@ -392,18 +381,15 @@
       document.body.style.overflow = '';
     }
 
-    // Save toggle
     function toggleSave(btn) {
       const saved = btn.classList.toggle('saved');
       btn.textContent = saved ? 'تم الحفظ ✓' : 'حفظ';
     }
 
-    // Keyboard: ESC to close lightbox
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') closeLightboxBtn();
     });
 
-    // Init
     loadPins(20);
   </script>
 </body>

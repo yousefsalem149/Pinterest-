@@ -1,1168 +1,410 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>m&amp;s — لوحة إلهامك</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --ink:#1B1B1F;
-    --paper:#F6F4EF;
-    --paper-2:#EFEBE2;
-    --teal:#1F6F5C;
-    --teal-deep:#134A3D;
-    --mustard:#E8A93B;
-    --line:#DAD4C6;
-    --card-shadow: 0 1px 2px rgba(27,27,31,.06), 0 8px 20px -10px rgba(27,27,31,.18);
-  }
-  *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{
-    margin:0;
-    background:var(--paper);
-    color:var(--ink);
-    font-family:'Manrope', sans-serif;
-    -webkit-font-smoothing:antialiased;
-  }
-  h1,h2,.logo,.modal-title{
-    font-family:'Fraunces', serif;
-  }
-  a{color:inherit; text-decoration:none;}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>m&s - اكتشفي أفكاركِ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Tajawal', sans-serif; background: #f5f5f5; overflow-x: hidden; }
 
-  /* ---------- HEADER ---------- */
-  header{
-    position:sticky; top:0; z-index:50;
-    background:rgba(246,244,239,.92);
-    backdrop-filter: blur(10px);
-    border-bottom:1px solid var(--line);
-  }
-  .topbar{
-    display:flex; align-items:center; gap:20px;
-    padding:14px 28px;
-    max-width:1500px; margin:0 auto;
-  }
-  .logo{
-    font-size:26px; font-weight:700; letter-spacing:.5px;
-    color:var(--teal-deep);
-    flex-shrink:0;
-    position:relative;
-  }
-  .logo span.amp{
-    color:var(--mustard);
-    font-style:italic;
-  }
-  .search-wrap{
-    flex:1; max-width:640px;
-    position:relative;
-  }
-  .search-wrap input{
-    width:100%;
-    padding:12px 44px 12px 16px;
-    border-radius:999px;
-    border:1.5px solid var(--line);
-    background:#fff;
-    font-family:'Manrope',sans-serif;
-    font-size:14.5px;
-    outline:none;
-    transition:border-color .15s, box-shadow .15s;
-  }
-  .search-wrap input:focus{
-    border-color:var(--teal);
-    box-shadow:0 0 0 3px rgba(31,111,92,.12);
-  }
-  .search-wrap svg{
-    position:absolute; right:16px; top:50%; transform:translateY(-50%);
-    width:16px; height:16px; opacity:.5;
-  }
-  .save-count{
-    display:flex; align-items:center; gap:8px;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12.5px;
-    color:var(--teal-deep);
-    background:var(--paper-2);
-    border:1px solid var(--line);
-    padding:9px 14px;
-    border-radius:999px;
-    flex-shrink:0;
-    white-space:nowrap;
-  }
-  .save-count b{color:var(--ink); font-weight:700;}
+    /* Header */
+    .header {
+      position: sticky; top: 0; z-index: 100;
+      background: white; border-bottom: 1px solid #e0e0e0;
+      padding: 12px 24px; display: flex; align-items: center; gap: 16px;
+    }
+    .logo-wrap { display: flex; align-items: center; gap: 10px; cursor: pointer; text-decoration: none; }
+    .logo-circle {
+      width: 40px; height: 40px; background: #111; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: 800; font-size: 18px;
+    }
+    .logo-text { font-size: 26px; font-weight: 800; color: #111; letter-spacing: -1px; }
 
-  nav.cats{
-    display:flex; gap:10px;
-    padding:0 28px 14px;
-    max-width:1500px; margin:0 auto;
-    overflow-x:auto;
-    scrollbar-width:none;
-  }
-  nav.cats::-webkit-scrollbar{display:none;}
-  .pill{
-    flex-shrink:0;
-    padding:8px 16px;
-    border-radius:999px;
-    border:1.5px solid var(--line);
-    background:#fff;
-    font-size:13.5px; font-weight:600;
-    cursor:pointer;
-    transition:all .15s;
-    color:var(--ink);
-  }
-  .pill:hover{border-color:var(--teal); color:var(--teal-deep);}
-  .pill.active{
-    background:var(--teal-deep);
-    border-color:var(--teal-deep);
-    color:#fff;
-  }
+    .search-box { flex: 1; max-width: 600px; position: relative; }
+    .search-box input {
+      width: 100%; padding: 12px 16px 12px 44px;
+      border-radius: 28px; border: none; background: #efefef;
+      font-size: 15px; font-family: inherit; outline: none;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .search-box input:focus { background: #e2e2e2; box-shadow: 0 0 0 3px rgba(0,0,0,0.08); }
+    .search-icon {
+      position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+      width: 18px; height: 18px; opacity: 0.5;
+    }
 
-  /* ---------- HERO STRIP ---------- */
-  .hero{
-    max-width:1500px; margin:0 auto;
-    padding:34px 28px 10px;
-  }
-  .hero h1{
-    font-size:clamp(28px, 4vw, 44px);
-    font-weight:600;
-    margin:0 0 6px;
-    line-height:1.15;
-  }
-  .hero p{
-    margin:0; color:#5b5a53; font-size:15px; max-width:560px;
-  }
-  .hero .tape{
-    display:inline-block;
-    background:var(--mustard);
-    color:var(--teal-deep);
-    font-family:'IBM Plex Mono',monospace;
-    font-size:11.5px; font-weight:500;
-    padding:3px 10px;
-    transform:rotate(-2deg);
-    margin-bottom:10px;
-    box-shadow:1px 2px 0 rgba(0,0,0,.08);
-  }
+    .nav-btns { display: flex; gap: 10px; }
+    .btn-primary {
+      padding: 10px 20px; border-radius: 24px; border: none;
+      background: #111; color: white; font-weight: 700;
+      font-size: 14px; cursor: pointer; font-family: inherit;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-primary:active { transform: scale(0.97); }
+    .btn-secondary {
+      padding: 10px 20px; border-radius: 24px; border: none;
+      background: #efefef; color: #111; font-weight: 700;
+      font-size: 14px; cursor: pointer; font-family: inherit;
+      transition: background 0.2s;
+    }
+    .btn-secondary:hover { background: #e2e2e2; }
 
-  /* ---------- MASONRY GRID ---------- */
-  main{
-    max-width:1500px; margin:0 auto;
-    padding:18px 22px 80px;
-  }
-  .grid{
-    column-count:2;
-    column-gap:16px;
-  }
-  @media(min-width:560px){ .grid{column-count:3;} }
-  @media(min-width:820px){ .grid{column-count:4;} }
-  @media(min-width:1120px){ .grid{column-count:5;} }
-  @media(min-width:1400px){ .grid{column-count:6;} }
+    /* Categories */
+    .categories {
+      position: sticky; top: 65px; z-index: 99;
+      background: white; padding: 12px 24px;
+      display: flex; gap: 10px; overflow-x: auto;
+      scrollbar-width: none; border-bottom: 1px solid #f0f0f0;
+    }
+    .categories::-webkit-scrollbar { display: none; }
+    .cat-btn {
+      padding: 8px 18px; border-radius: 24px; border: none;
+      background: #efefef; color: #111; font-size: 14px;
+      font-weight: 700; cursor: pointer; font-family: inherit;
+      white-space: nowrap; transition: all 0.2s;
+    }
+    .cat-btn:hover { background: #ddd; }
+    .cat-btn.active { background: #111; color: white; }
 
-  .card{
-    break-inside:avoid;
-    margin-bottom:16px;
-    position:relative;
-    border-radius:14px;
-    overflow:hidden;
-    background:var(--paper-2);
-    box-shadow:var(--card-shadow);
-    cursor:pointer;
-    opacity:0;
-    animation:fadeIn .5s ease forwards;
-  }
-  @keyframes fadeIn{ to{opacity:1;} }
-  .card img{
-    width:100%; display:block;
-    aspect-ratio: var(--ar, 3/4);
-    object-fit:cover;
-    background:linear-gradient(120deg,#e8e4d8 25%,#f2efe6 37%,#e8e4d8 63%);
-    background-size:400% 100%;
-    animation:shimmer 1.4s infinite;
-  }
-  .card img.loaded{ animation:none; background:none; }
-  @keyframes shimmer{
-    0%{background-position:100% 0;}
-    100%{background-position:0 0;}
-  }
-  .card .tag{
-    position:absolute; top:10px; right:10px;
-    background:rgba(255,255,255,.92);
-    color:var(--teal-deep);
-    font-size:11px; font-weight:700;
-    padding:4px 10px;
-    border-radius:999px;
-    transform:rotate(-3deg);
-  }
-  .card .overlay{
-    position:absolute; inset:0;
-    background:linear-gradient(180deg, rgba(19,74,61,0) 55%, rgba(15,25,22,.72) 100%);
-    opacity:0;
-    transition:opacity .2s;
-    display:flex; align-items:flex-end;
-    padding:12px;
-  }
-  .card:hover .overlay{opacity:1;}
-  .card .overlay-title{
-    color:#fff; font-size:13px; font-weight:600;
-    line-height:1.3;
-  }
-  .card .save-btn{
-    position:absolute; top:10px; left:10px;
-    background:var(--teal);
-    color:#fff;
-    border:none;
-    border-radius:999px;
-    padding:8px 14px;
-    font-size:12.5px; font-weight:700;
-    font-family:'Manrope',sans-serif;
-    cursor:pointer;
-    opacity:0;
-    transform:translateY(-6px);
-    transition:all .18s;
-  }
-  .card:hover .save-btn{opacity:1; transform:translateY(0);}
-  .card .save-btn.saved{background:var(--mustard); color:var(--teal-deep);}
+    /* Masonry Grid */
+    .grid {
+      padding: 20px; max-width: 1400px; margin: 0 auto;
+      column-count: 2; column-gap: 16px;
+    }
+    @media (min-width: 640px) { .grid { column-count: 3; } }
+    @media (min-width: 1024px) { .grid { column-count: 4; } }
+    @media (min-width: 1400px) { .grid { column-count: 5; } }
 
-  .loader{
-    text-align:center;
-    padding:40px 0;
-    color:#8a8878;
-    font-family:'IBM Plex Mono',monospace;
-    font-size:12.5px;
-  }
-  .loader .dot{
-    display:inline-block; width:6px; height:6px; border-radius:50%;
-    background:var(--teal); margin:0 3px;
-    animation:bounce 1s infinite;
-  }
-  .loader .dot:nth-child(2){animation-delay:.15s;}
-  .loader .dot:nth-child(3){animation-delay:.3s;}
-  @keyframes bounce{ 0%,80%,100%{transform:translateY(0); opacity:.4;} 40%{transform:translateY(-5px); opacity:1;} }
+    .pin {
+      break-inside: avoid; margin-bottom: 16px;
+      border-radius: 16px; overflow: hidden;
+      background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      cursor: pointer; position: relative;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .pin:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(0,0,0,0.15); }
+    .pin-img-wrap { position: relative; overflow: hidden; }
+    .pin img {
+      width: 100%; display: block;
+      transition: transform 0.4s ease;
+    }
+    .pin:hover img { transform: scale(1.05); }
 
-  .empty{
-    text-align:center; padding:80px 20px; color:#8a8878;
-  }
-  .empty-suggest{
-    display:flex; gap:8px; justify-content:center; flex-wrap:wrap;
-    margin-top:18px;
-  }
-  .empty-suggest button{
-    padding:8px 16px; border-radius:999px; border:1.5px solid var(--line);
-    background:#fff; font-size:13px; font-weight:600; cursor:pointer; color:var(--teal-deep);
-  }
-  .empty-suggest button:hover{border-color:var(--teal);}
+    .pin-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.4); opacity: 0;
+      transition: opacity 0.25s;
+      display: flex; flex-direction: column;
+      justify-content: space-between; padding: 14px;
+    }
+    .pin:hover .pin-overlay { opacity: 1; }
 
-  /* ---------- MODAL ---------- */
-  .modal-bg{
-    position:fixed; inset:0; background:rgba(19,22,20,.7);
-    display:none; align-items:center; justify-content:center;
-    z-index:200; padding:24px;
-  }
-  .modal-bg.open{display:flex;}
-  .modal{
-    background:#fff; border-radius:18px; overflow:hidden;
-    max-width:920px; width:100%; max-height:88vh;
-    display:flex; flex-wrap:wrap;
-    box-shadow:0 30px 60px rgba(0,0,0,.35);
-  }
-  .modal img{
-    width:100%; max-width:480px; object-fit:cover; display:block;
-    max-height:88vh;
-  }
-  .modal-side{
-    flex:1; min-width:260px; padding:26px;
-    display:flex; flex-direction:column; gap:14px;
-  }
-  .modal-title{font-size:22px; font-weight:600;}
-  .modal-tag{
-    align-self:flex-start;
-    background:var(--paper-2); color:var(--teal-deep);
-    padding:5px 12px; border-radius:999px; font-size:12px; font-weight:700;
-  }
-  .modal-desc{color:#5b5a53; font-size:14px; line-height:1.6;}
-  .modal-save{
-    margin-top:auto;
-    background:var(--teal-deep); color:#fff; border:none;
-    padding:13px; border-radius:12px; font-weight:700; font-size:14.5px;
-    cursor:pointer; font-family:'Manrope',sans-serif;
-  }
-  .modal-save.saved{background:var(--mustard); color:var(--teal-deep);}
-  .modal-close{
-    position:absolute; top:16px; left:16px;
-    background:rgba(255,255,255,.9); border:none;
-    width:34px; height:34px; border-radius:50%;
-    font-size:18px; cursor:pointer;
-  }
-  .modal{position:relative;}
+    .save-btn {
+      align-self: flex-end;
+      background: #e60023; color: white; border: none;
+      padding: 10px 20px; border-radius: 24px;
+      font-weight: 700; font-size: 14px; cursor: pointer;
+      font-family: inherit; transition: background 0.2s, transform 0.1s;
+    }
+    .save-btn:hover { background: #ad081b; }
+    .save-btn:active { transform: scale(0.95); }
+    .save-btn.saved { background: #111; }
 
-  ::selection{background:var(--mustard); color:var(--teal-deep);}
-</style>
+    .pin-actions {
+      display: flex; gap: 8px; align-self: flex-end; margin-top: auto;
+    }
+    .pin-actions button {
+      background: white; border: none; width: 34px; height: 34px;
+      border-radius: 50%; cursor: pointer; display: flex;
+      align-items: center; justify-content: center;
+      font-size: 16px; transition: background 0.2s;
+    }
+    .pin-actions button:hover { background: #f0f0f0; }
+
+    .pin-info { padding: 10px 14px 14px; }
+    .pin-info h4 { margin: 0 0 6px 0; font-size: 14px; color: #111; font-weight: 700; }
+    .pin-meta { display: flex; align-items: center; gap: 8px; }
+    .pin-avatar {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+    }
+    .pin-meta span { font-size: 12px; color: #767676; }
+
+    /* Loading */
+    .loading {
+      text-align: center; padding: 40px; display: none;
+    }
+    .spinner {
+      display: inline-block; width: 40px; height: 40px;
+      border: 3px solid #efefef; border-top-color: #111;
+      border-radius: 50%; animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading p { color: #767676; margin-top: 12px; font-size: 14px; }
+
+    /* Lightbox */
+    .lightbox {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.92); z-index: 200;
+      align-items: center; justify-content: center; padding: 20px;
+    }
+    .lightbox.active { display: flex; }
+    .lightbox-inner { position: relative; max-width: 90vw; max-height: 90vh; }
+    .lightbox img {
+      max-width: 90vw; max-height: 82vh;
+      border-radius: 16px; display: block;
+    }
+    .lightbox-close {
+      position: absolute; top: -48px; right: 0;
+      background: white; border: none; width: 40px; height: 40px;
+      border-radius: 50%; cursor: pointer; font-size: 18px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .lightbox-close:hover { background: #f0f0f0; }
+    .lightbox-info {
+      background: white; padding: 16px 20px;
+      border-radius: 0 0 16px 16px; margin-top: -4px;
+    }
+    .lightbox-info h3 { margin: 0 0 4px 0; font-size: 17px; }
+    .lightbox-info p { margin: 0; color: #767676; font-size: 13px; }
+
+    /* Mobile */
+    @media (max-width: 640px) {
+      .header { padding: 10px 14px; gap: 10px; }
+      .logo-text { font-size: 20px; }
+      .nav-btns { display: none; }
+      .search-box { margin-right: 0; }
+      .categories { padding: 10px 14px; top: 58px; }
+      .grid { padding: 14px; column-gap: 10px; }
+      .pin { margin-bottom: 10px; border-radius: 12px; }
+    }
+  </style>
 </head>
 <body>
 
-<header>
-  <div class="topbar">
-    <div class="logo">m<span class="amp">&amp;</span>s</div>
-    <div class="search-wrap">
-      <input id="searchInput" type="text" placeholder="ابحث عن إلهام… طبيعة، عمارة، أزياء، طعام" />
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+  <!-- Header -->
+  <header class="header">
+    <a href="#" class="logo-wrap" onclick="window.scrollTo({top:0,behavior:'smooth'}); return false;">
+      <div class="logo-circle">M</div>
+      <span class="logo-text">m&s</span>
+    </a>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="ابحثي عن أفكار...">
+      <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+      </svg>
     </div>
-    <div class="save-count">محفوظ: <b id="savedCount">0</b></div>
+    <div class="nav-btns">
+      <button class="btn-primary">تسجيل الدخول</button>
+      <button class="btn-secondary">إنشاء حساب</button>
+    </div>
+  </header>
+
+  <!-- Categories -->
+  <div class="categories">
+    <button class="cat-btn active" data-cat="all">الكل</button>
+    <button class="cat-btn" data-cat="fashion">موضة</button>
+    <button class="cat-btn" data-cat="interior">ديكور</button>
+    <button class="cat-btn" data-cat="food">طعام</button>
+    <button class="cat-btn" data-cat="travel">سفر</button>
+    <button class="cat-btn" data-cat="art">فن</button>
+    <button class="cat-btn" data-cat="nature">طبيعة</button>
+    <button class="cat-btn" data-cat="wedding">زفاف</button>
   </div>
-  <nav class="cats" id="catsNav"></nav>
-</header>
 
-<div class="hero">
-  <div class="tape">صور بلا نهاية — تمرير مستمر</div>
-  <h1>لوحتك، بلا حدود</h1>
-  <p>اجمع كل ما يلهمك من الطبيعة إلى العمارة، من الطعام إلى الفن — كل ذلك في مكان واحد.</p>
-</div>
+  <!-- Grid -->
+  <div class="grid" id="masonryGrid"></div>
 
-<main>
-  <div class="grid" id="grid"></div>
-  <div class="loader" id="loader"><span class="dot"></span><span class="dot"></span><span class="dot"></span> جارٍ تحميل المزيد</div>
-  <div class="empty" id="emptyMsg" style="display:none;">
-    <div id="emptyText">لا نتائج مطابقة لبحثك</div>
-    <div class="empty-suggest" id="emptySuggest"></div>
+  <!-- Loading -->
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <p>جاري تحميل المزيد...</p>
   </div>
-</main>
 
-<div class="modal-bg" id="modalBg">
-  <div class="modal">
-    <button class="modal-close" id="modalClose">✕</button>
-    <img id="modalImg" src="" alt="">
-    <div class="modal-side">
-      <span class="modal-tag" id="modalTag"></span>
-      <div class="modal-title" id="modalTitle"></div>
-      <div class="modal-desc" id="modalDesc"></div>
-      <button class="modal-save" id="modalSave">حفظ في اللوحة</button>
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+    <div class="lightbox-inner">
+      <button class="lightbox-close" onclick="closeLightboxBtn()">✕</button>
+      <img id="lightboxImg" src="" alt="">
+      <div class="lightbox-info">
+        <h3 id="lbTitle"></h3>
+        <p id="lbDesc"></p>
+      </div>
     </div>
   </div>
-</div>
 
-<script>
-/* ---------------- CATEGORIES ---------------- */
-const CATEGORIES = [
-  {key:"nature", label:"طبيعة", seed:"nature",
-    words:["جبل هادئ","غابة كثيفة","شروق الشمس","بحيرة صافية","وادٍ أخضر","شلال منعزل","حقل أزهار","غروب الشمس","نهر جبلي","سماء ملبدة"],
-    tags:["mountain","forest","sunrise","lake","valley","waterfall","flowers","sunset","river","clouds"],
-    synonyms:["nature","طبيعة","جبل","mountain","غابة","forest","شجر","tree","بحيرة","lake","بحر","sea","سماء","sky","شلال","waterfall","وادي","valley","نهر","river","زهور","flower","شروق","sunrise","غروب","sunset","منظر طبيعي","landscape"]},
-  {key:"architecture", label:"عمارة", seed:"arch",
-    words:["واجهة معمارية","سلم حلزوني","مبنى زجاجي","تفاصيل معمارية","خط أفق المدينة","قوس حجري","برج شاهق","نافذة كلاسيكية","ممر مقنطر","جسر معلق"],
-    tags:["architecture","staircase","glassbuilding","architecturedetail","cityskyline","archway","skyscraper","window","corridor","bridge"],
-    synonyms:["architecture","عمارة","مبنى","building","بيت","house","برج","tower","جسر","bridge","مدينة","city","شارع","street","نافذة","window","سلم","stairs","قصر","palace","مسجد","mosque","كنيسة","church"]},
-  {key:"fashion", label:"أزياء", seed:"fashion",
-    words:["إطلالة أنيقة","تنسيق خريفي","إكسسوارات مختارة","نمط الشارع","ألوان الموسم","حذاء كلاسيكي","حقيبة يد","نظارة شمسية","معطف شتوي","فستان صيفي"],
-    tags:["fashion","outfit","accessories","streetstyle","fashioncolor","shoes","handbag","sunglasses","coat","dress"],
-    synonyms:["fashion","أزياء","ملابس","clothes","حذاء","shoes","حقيبة","bag","نظارة","glasses","فستان","dress","موضة","style","إكسسوارات","accessories","عطر","perfume","مجوهرات","jewelry"]},
-  {key:"food", label:"طعام", seed:"food",
-    words:["طبق شهي","نكهات منزلية","مائدة دافئة","حلوى فاخرة","وصفة سريعة","قهوة الصباح","خبز طازج","سلطة صحية","حساء دافئ","فطور شهي"],
-    tags:["food","homecooking","dinnertable","dessert","recipe","coffee","freshbread","salad","soup","breakfast"],
-    synonyms:["food","طعام","أكل","اكل","وجبة","meal","قهوة","coffee","حلوى","dessert","cake","كيك","خبز","bread","فطور","breakfast","عشاء","dinner","سلطة","salad","مطبخ","kitchen","وصفة","recipe","فواكه","fruit"]},
-  {key:"travel", label:"سفر", seed:"travel",
-    words:["وجهة الحلم","طريق مفتوح","مدينة عتيقة","شاطئ منعزل","رحلة استكشاف","مطار دولي","خريطة سفر","حقيبة سفر","فندق فاخر","قارب شراعي"],
-    tags:["traveldestination","openroad","oldtown","beach","exploration","airport","map","travelbag","hotel","sailboat"],
-    synonyms:["travel","سفر","رحلة","trip","شاطئ","beach","فندق","hotel","مطار","airport","خريطة","map","جزيرة","island","صحراء","desert","استكشاف","explore","سياحة","tourism"]},
-  {key:"art", label:"فن", seed:"art",
-    words:["لوحة تجريدية","خط فني","نحت معاصر","ألوان مائية","تركيب بصري","رسم بالفحم","فن الشارع","معرض فني","تصميم جرافيك","خزف يدوي"],
-    tags:["abstractart","calligraphy","sculpture","watercolor","artinstallation","charcoaldrawing","streetart","artgallery","graphicdesign","ceramics"],
-    synonyms:["art","فن","رسم","painting","لوحة","canvas","نحت","sculpture","خط عربي","calligraphy","ألوان","colors","تصميم","design","معرض","gallery","جرافيك","graphic"]},
-  {key:"tech", label:"تقنية", seed:"tech",
-    words:["تصميم مستقبلي","واجهة أنيقة","إضاءة رقمية","أدوات ذكية","تفاصيل دقيقة","لوحة مفاتيح","حاسوب محمول","هاتف ذكي","دائرة إلكترونية","روبوت آلي"],
-    tags:["futuristicdesign","userinterface","digitallight","smartdevice","macro","keyboard","laptop","smartphone","circuitboard","robot"],
-    synonyms:["tech","technology","تقنية","تكنولوجيا","حاسوب","computer","لابتوب","laptop","هاتف","phone","روبوت","robot","ذكاء اصطناعي","ai","برمجة","code","شاشة","screen"]},
-  {key:"animals", label:"حيوانات", seed:"animals",
-    words:["كائن بري","لحظة عفوية","في موطنه الطبيعي","تفاصيل نادرة","حركة حيوية","قط منزلي","كلب وفي","طائر مهاجر","حصان أصيل","أسد ملكي"],
-    tags:["wildlife","candidmoment","naturalhabitat","animalcloseup","animalmotion","cat","dog","bird","horse","lion"],
-    synonyms:["animals","حيوانات","حيوان","animal","قطة","cat","كلب","dog","طائر","bird","أسد","lion","حصان","horse","سمك","fish","حديقة حيوان","zoo"]},
-  {key:"fitness", label:"رياضة", seed:"fitness",
-    words:["طاقة الصباح","تمرين مركّز","لياقة يومية","توازن وقوة","نمط نشط","جري صباحي","يوغا هادئة","رفع أثقال","سباحة منتظمة","دراجة هوائية"],
-    tags:["morningenergy","workout","dailyfitness","strengthbalance","activelifestyle","running","yoga","weightlifting","swimming","cycling"],
-    synonyms:["fitness","رياضة","تمرين","exercise","جري","running","يوغا","yoga","أثقال","weights","سباحة","swimming","دراجة","bike","صحة","health","جيم","gym"]},
-  {key:"interior", label:"ديكور", seed:"interior",
-    words:["ركن هادئ","تصميم دافئ","مساحة بسيطة","ضوء طبيعي","تفاصيل منزلية","غرفة معيشة","مطبخ عصري","غرفة نوم","حديقة منزلية","إضاءة دافئة"],
-    tags:["cozycorner","warminterior","minimalspace","naturallight","homedetail","livingroom","modernkitchen","bedroom","homegarden","warmlighting"],
-    synonyms:["interior","ديكور","منزل","home","غرفة","room","أثاث","furniture","مطبخ","kitchen","غرفة نوم","bedroom","غرفة معيشة","living room","تصميم داخلي","design"]},
-];
-const BATCH_SIZE = 28;
+  <script>
+    const categories = {
+      fashion: ['fashion','style','outfit','dress','model'],
+      interior: ['interior','home','decor','living room','bedroom'],
+      food: ['food','recipe','dessert','coffee','meal'],
+      travel: ['travel','landscape','city','beach','mountain'],
+      art: ['art','painting','design','creative','illustration'],
+      nature: ['nature','flowers','forest','sunset','ocean'],
+      wedding: ['wedding','bride','flowers','romantic','elegant']
+    };
 
-let activeCat = "all";
-let searchTerm = "";
-let savedIds = new Set();
+    const titles = {
+      fashion: ['إطلالة أنيقة للخروج','تنسيق كاجوال يومي','فستان سهرة فاخر','إكسسوارات أنيقة','ستايل الشتاء','إطلالة مكتبية','جاكيت جلد فاخر','حذاء بكعب عالٍ'],
+      interior: ['ديكور غرفة معيشة','تصميم مطبخ عصري','أفكار ديكور بسيطة','غرفة نوم هادئة','جلسة خارجية','حمام سبا','مكتب منزلي أنيق','إضاءة دافئة'],
+      food: ['وصفة سهلة وسريعة','حلى الشوكولاتة','فطور صحي','قهوة الصباح','عشاء رومانسي','سلطة ملونة','باستا إيطالية','كيكة الفانيليا'],
+      travel: ['وجهة سفر رائعة','شاطئ الأحلام','جولة في المدينة','مغامرة جبلية','غروب الشمس','شارع أوروبي','صحراء ذهبية','بحيرة جبلية'],
+      art: ['لوحة فنية مذهلة','تصميم جرافيكي','فن الشارع','إبداع بصري','تصوير فني','خط عربي','نحت حديث','تجريدي ملون'],
+      nature: ['منظر طبيعي خلاب','حديقة الورود','غابة الصنوبر','بحر هادئ','سماء مليئة بالنجوم','شلال ساحر','جبال الثلج','غروب على البحر'],
+      wedding: ['فستان زفاف أحلامك','ديكور حفل زفاف','بوكيه ورد أنيق','لحظات زفاف ساحرة','تنسيق طاولة زفاف','حلقة خطوبة','كعكة زفاف','دعوة زفاف فاخرة']
+    };
 
-/* ---- infinite generation state ---- */
-let activeCats = [];          // categories currently matching filter/search
-let catCursor = 0;            // round-robin pointer into activeCats
-let counters = {};            // per-category generation index, grows forever
+    const users = ['سارة','نورا','ليلى','مريم','فاطمة','هدى','ريم','دانة','لمى','جنى'];
+    const heights = [220, 260, 300, 340, 280, 360, 240, 320, 290, 380];
 
-function seededRand(seed){
-  let x = Math.sin(seed) * 10000;
-  return x - Math.floor(x);
-}
+    let currentCat = 'all', page = 1, isLoading = false, allPins = [];
 
-function hashCode(str){
-  let h = 0;
-  for(let i=0;i<str.length;i++){ h = (h*31 + str.charCodeAt(i)) | 0; }
-  return Math.abs(h);
-}
+    function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
-function buildItem(cat, i){
-  const gid = i;
-  const ar = [ [3,4],[1,1],[4,5],[2,3],[3,2] ][Math.floor(seededRand(gid + cat.key.length*7919)*5)];
-  const tag = cat.tags[i % cat.tags.length];
-  const id = cat.key + "-" + i;
-  return {
-    id,
-    cat: cat.key,
-    catLabel: cat.label,
-    title: cat.words[i % cat.words.length] + " #" + (i+1),
-    flickrTag: tag,
-    lock: hashCode(id),
-    arW: ar[0], arH: ar[1]
-  };
-}
+    function getImageUrl(cat, idx) {
+      const terms = cat === 'all' ? [...Object.values(categories).flat()] : (categories[cat] || ['aesthetic']);
+      const term = rand(terms).replace(' ', ',');
+      const h = rand(heights);
+      return `https://images.unsplash.com/photo-${getUnsplashId(idx)}?w=400&h=${h}&fit=crop&q=80`;
+    }
 
-function imgUrl(item, scale){
-  const w = item.arW * scale, h = item.arH * scale;
-  return `https://loremflickr.com/${w}/${h}/${item.flickrTag}?lock=${item.lock}`;
-}
+    // Use deterministic Unsplash IDs for reliability
+    function getUnsplashId(idx) {
+      const ids = [
+        '1515886657613-9f3515b0c78f','1529139574466-a303027c1d8b','1490481651871-32d2e7cd4c63',
+        '1509631179647-0177331693ae','1483985988355-763728e1935b','1512496015850-a40c9f8c3f9b',
+        '1496747611176-843222e1e57c','1524504388940-b1c1725183bd','1503342217515-4f5f06118387',
+        '1469334031218-e382a71b716b','1517841905240-472988babdf9','1529626455594-4ff0802cfb7e',
+        '1492106087820-71f1a00d2b11','1507003211169-0a1dd7228f2d','1524502397800-2ee5247f0a69',
+        '1515372039737-0d5a5b95b08b','1500917293891-ef795e70e1f6','1520975661595-6453be3f7070',
+        '1512436991641-489649a657fd','1504703395950-b8915a54291b','1494790108377-be9c29b29330',
+        '1534528741775-53994a69daeb','1506794778202-cad84cf45f1d','1521119989659-a83e2a68e4c7',
+        '1531746020798-e6953c6e8e04','1494790108377-be9c29b29330','1517841905240-472988babdf9',
+        '1509631179647-0177331693ae','1529139574466-a303027c1d8b','1515886657613-9f3515b0c78f',
+        '1483985988355-763728e1935b','1503342217515-4f5f06118387','1469334031218-e382a71b716b',
+        '1524504388940-b1c1725183bd','1496747611176-843222e1e57c','1512496015850-a40c9f8c3f9b',
+        '1507003211169-0a1dd7228f2d','1524502397800-2ee5247f0a69','1515372039737-0d5a5b95b08b',
+        '1500917293891-ef795e70e1f6','1520975661595-6453be3f7070','1512436991641-489649a657fd',
+        '1504703395950-b8915a54291b','1494790108377-be9c29b29330','1534528741775-53994a69daeb',
+        '1506794778202-cad84cf45f1d','1521119989659-a83e2a68e4c7','1531746020798-e6953c6e8e04'
+      ];
+      return ids[(page * 20 + idx) % ids.length];
+    }
 
-/* normalize: lowercase + strip Arabic diacritics/alef variants for forgiving matching */
-function normalize(str){
-  return str
-    .toLowerCase()
-    .replace(/[\u064B-\u0652]/g,"")      // diacritics
-    .replace(/[إأآا]/g,"ا")
-    .replace(/ى/g,"ي")
-    .replace(/ة/g,"ه")
-    .trim();
-}
+    function createPin(cat, idx) {
+      const actualCat = cat === 'all' ? Object.keys(categories)[Math.floor(Math.random() * 7)] : cat;
+      const imgUrl = getImageUrl(actualCat, idx);
+      const title = rand(titles[actualCat] || titles.fashion);
+      const user = rand(users);
+      const h = rand(heights);
 
-/* which categories match current filter (activeCat) + free-text search */
-function computeActiveCategories(){
-  let cats = CATEGORIES;
-  if(activeCat !== "all"){
-    cats = cats.filter(c => c.key === activeCat);
-  }
-  if(searchTerm){
-    const n = normalize(searchTerm);
-    cats = cats.filter(cat=>{
-      if(normalize(cat.label).includes(n)) return true;
-      if(cat.synonyms.some(s => normalize(s).includes(n) || n.includes(normalize(s)))) return true;
-      if(cat.words.some(w => normalize(w).includes(n))) return true;
-      return false;
+      const div = document.createElement('div');
+      div.className = 'pin';
+      div.dataset.search = (title + ' ' + actualCat + ' ' + user).toLowerCase();
+      div.innerHTML = `
+        <div class="pin-img-wrap" style="height:${h}px;">
+          <img src="${imgUrl}" alt="${title}" loading="lazy"
+            onerror="this.src='https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=300&fit=crop'"
+            onclick="openLightbox('${imgUrl}','${title}','${user}')">
+          <div class="pin-overlay">
+            <button class="save-btn" onclick="event.stopPropagation(); toggleSave(this)">حفظ</button>
+            <div class="pin-actions">
+              <button onclick="event.stopPropagation()" title="مشاركة">↗</button>
+              <button onclick="event.stopPropagation()" title="المزيد">⋯</button>
+            </div>
+          </div>
+        </div>
+        <div class="pin-info">
+          <h4>${title}</h4>
+          <div class="pin-meta">
+            <div class="pin-avatar"></div>
+            <span>${user}</span>
+          </div>
+        </div>
+      `;
+      return div;
+    }
+
+    function loadPins(count = 12) {
+      if (isLoading) return;
+      isLoading = true;
+      document.getElementById('loading').style.display = 'block';
+
+      setTimeout(() => {
+        const grid = document.getElementById('masonryGrid');
+        for (let i = 0; i < count; i++) {
+          const pin = createPin(currentCat, i);
+          grid.appendChild(pin);
+          allPins.push(pin);
+        }
+        page++;
+        isLoading = false;
+        document.getElementById('loading').style.display = 'none';
+      }, 500);
+    }
+
+    // Infinite scroll
+    window.addEventListener('scroll', () => {
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 600) {
+        loadPins(12);
+      }
     });
-  }
-  return cats;
-}
 
-/* ---------------- NAV PILLS ---------------- */
-const catsNav = document.getElementById('catsNav');
-function renderPills(){
-  catsNav.innerHTML = "";
-  const allPill = document.createElement('button');
-  allPill.className = 'pill active';
-  allPill.textContent = 'الكل';
-  allPill.onclick = ()=> selectCat('all', allPill);
-  catsNav.appendChild(allPill);
-  CATEGORIES.forEach(cat=>{
-    const p = document.createElement('button');
-    p.className = 'pill';
-    p.textContent = cat.label;
-    p.onclick = ()=> selectCat(cat.key, p);
-    catsNav.appendChild(p);
-  });
-}
-function selectCat(key, el){
-  activeCat = key;
-  [...catsNav.children].forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
-  resetGrid();
-}
-renderPills();
-
-/* ---------------- SEARCH ---------------- */
-const searchInput = document.getElementById('searchInput');
-let searchTimer;
-searchInput.addEventListener('input', e=>{
-  clearTimeout(searchTimer);
-  searchTimer = setTimeout(()=>{
-    searchTerm = e.target.value.trim();
-    resetGrid();
-  }, 200);
-});
-searchInput.addEventListener('keydown', e=>{
-  if(e.key === 'Enter'){
-    clearTimeout(searchTimer);
-    searchTerm = e.target.value.trim();
-    resetGrid();
-  }
-});
-
-/* ---------------- GRID RENDER ---------------- */
-const grid = document.getElementById('grid');
-const loader = document.getElementById('loader');
-const emptyMsg = document.getElementById('emptyMsg');
-
-function resetGrid(){
-  grid.innerHTML = "";
-  activeCats = computeActiveCategories();
-  catCursor = 0;
-  counters = {};
-  activeCats.forEach(c => counters[c.key] = 0);
-  const hasResults = activeCats.length > 0;
-  emptyMsg.style.display = hasResults ? 'none' : 'block';
-  loader.style.display = hasResults ? 'block' : 'none';
-  if(!hasResults){
-    document.getElementById('emptyText').textContent =
-      searchTerm ? `لا نتائج لـ "${searchTerm}" — جرّب إحدى الفئات التالية:` : 'لا نتائج مطابقة';
-    const sugg = document.getElementById('emptySuggest');
-    sugg.innerHTML = "";
-    CATEGORIES.forEach(cat=>{
-      const b = document.createElement('button');
-      b.textContent = cat.label;
-      b.onclick = ()=>{
-        searchInput.value = "";
-        searchTerm = "";
-        activeCat = cat.key;
-        [...catsNav.children].forEach(c=>c.classList.remove('active'));
-        [...catsNav.children].find(c=>c.textContent===cat.label)?.classList.add('active');
-        resetGrid();
-      };
-      sugg.appendChild(b);
+    // Category filter
+    document.querySelectorAll('.cat-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        currentCat = this.dataset.cat;
+        document.getElementById('masonryGrid').innerHTML = '';
+        allPins = [];
+        page = 1;
+        loadPins(16);
+      });
     });
-  }
-  loadMore();
-}
 
-function makeCard(item){
-  const card = document.createElement('div');
-  card.className = 'card';
-  card.style.setProperty('--ar', `${item.arW}/${item.arH}`);
+    // Search
+    document.getElementById('searchInput').addEventListener('input', function() {
+      const term = this.value.trim().toLowerCase();
+      allPins.forEach(pin => {
+        pin.style.display = term === '' || pin.dataset.search.includes(term) ? '' : 'none';
+      });
+    });
 
-  const img = document.createElement('img');
-  img.loading = 'lazy';
-  img.alt = item.title;
-  img.src = imgUrl(item, 160);
-  img.onload = ()=> img.classList.add('loaded');
-  img.onerror = ()=> { img.classList.add('loaded'); img.style.background = '#e2ded1'; };
+    // Lightbox
+    function openLightbox(src, title, user) {
+      document.getElementById('lightboxImg').src = src;
+      document.getElementById('lbTitle').textContent = title;
+      document.getElementById('lbDesc').textContent = 'بواسطة ' + user + ' • m&s';
+      document.getElementById('lightbox').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox(e) {
+      if (e.target.id === 'lightbox') closeLightboxBtn();
+    }
+    function closeLightboxBtn() {
+      document.getElementById('lightbox').classList.remove('active');
+      document.body.style.overflow = '';
+    }
 
-  const tag = document.createElement('div');
-  tag.className = 'tag';
-  tag.textContent = item.catLabel;
+    // Save toggle
+    function toggleSave(btn) {
+      const saved = btn.classList.toggle('saved');
+      btn.textContent = saved ? 'تم الحفظ ✓' : 'حفظ';
+    }
 
-  const overlay = document.createElement('div');
-  overlay.className = 'overlay';
-  const ot = document.createElement('div');
-  ot.className = 'overlay-title';
-  ot.textContent = item.title;
-  overlay.appendChild(ot);
+    // Keyboard: ESC to close lightbox
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeLightboxBtn();
+    });
 
-  const saveBtn = document.createElement('button');
-  saveBtn.className = 'save-btn';
-  saveBtn.textContent = savedIds.has(item.id) ? '✓ محفوظ' : 'حفظ';
-  if(savedIds.has(item.id)) saveBtn.classList.add('saved');
-  saveBtn.onclick = (e)=>{
-    e.stopPropagation();
-    toggleSave(item.id, saveBtn);
-  };
-
-  card.appendChild(img);
-  card.appendChild(tag);
-  card.appendChild(overlay);
-  card.appendChild(saveBtn);
-  card.onclick = ()=> openModal(item);
-  return card;
-}
-
-function toggleSave(id, btn){
-  if(savedIds.has(id)){
-    savedIds.delete(id);
-    if(btn){ btn.textContent='حفظ'; btn.classList.remove('saved'); }
-  } else {
-    savedIds.add(id);
-    if(btn){ btn.textContent='✓ محفوظ'; btn.classList.add('saved'); }
-  }
-  document.getElementById('savedCount').textContent = savedIds.size;
-}
-
-function loadMore(){
-  if(activeCats.length === 0){
-    loader.style.display = 'none';
-    return;
-  }
-  loader.style.display = 'block';
-  for(let n=0; n<BATCH_SIZE; n++){
-    const cat = activeCats[catCursor % activeCats.length];
-    const i = counters[cat.key]++;
-    const item = buildItem(cat, i);
-    grid.appendChild(makeCard(item));
-    catCursor++;
-  }
-  // infinite: never stops, loader stays visible to keep triggering more
-}
-
-/* infinite scroll */
-const sentinelObserver = new IntersectionObserver(entries=>{
-  entries.forEach(en=>{ if(en.isIntersecting) loadMore(); });
-}, {rootMargin:'800px'});
-sentinelObserver.observe(loader);
-
-/* ---------------- MODAL ---------------- */
-const modalBg = document.getElementById('modalBg');
-const modalImg = document.getElementById('modalImg');
-const modalTitle = document.getElementById('modalTitle');
-const modalTag = document.getElementById('modalTag');
-const modalDesc = document.getElementById('modalDesc');
-const modalSave = document.getElementById('modalSave');
-let currentModalItem = null;
-
-function openModal(item){
-  currentModalItem = item;
-  modalImg.src = imgUrl(item, 240);
-  modalTitle.textContent = item.title;
-  modalTag.textContent = item.catLabel;
-  modalDesc.textContent = `من مجموعة ${item.catLabel} — جزء من مجموعة صور لا نهائية على m&s.`;
-  modalSave.textContent = savedIds.has(item.id) ? '✓ محفوظة في لوحتك' : 'حفظ في اللوحة';
-  modalSave.classList.toggle('saved', savedIds.has(item.id));
-  modalBg.classList.add('open');
-}
-modalSave.onclick = ()=>{
-  toggleSave(currentModalItem.id);
-  modalSave.textContent = savedIds.has(currentModalItem.id) ? '✓ محفوظة في لوحتك' : 'حفظ في اللوحة';
-  modalSave.classList.toggle('saved', savedIds.has(currentModalItem.id));
-  const liveBtn = [...grid.children].find(c => c.querySelector('img').alt === currentModalItem.title);
-  if(liveBtn){
-    const b = liveBtn.querySelector('.save-btn');
-    b.textContent = savedIds.has(currentModalItem.id) ? '✓ محفوظ' : 'حفظ';
-    b.classList.toggle('saved', savedIds.has(currentModalItem.id));
-  }
-};
-document.getElementById('modalClose').onclick = ()=> modalBg.classList.remove('open');
-modalBg.onclick = (e)=>{ if(e.target === modalBg) modalBg.classList.remove('open'); };
-document.addEventListener('keydown', e=>{ if(e.key==='Escape') modalBg.classList.remove('open'); });
-
-/* ---------------- INIT ---------------- */
-resetGrid();
-</script>
+    // Init
+    loadPins(20);
+  </script>
 </body>
 </html>
-    border-radius:999px;
-    border:1.5px solid var(--line);
-    background:#fff;
-    font-size:13.5px; font-weight:600;
-    cursor:pointer;
-    transition:all .15s;
-    color:var(--ink);
-  }
-  .pill:hover{border-color:var(--teal); color:var(--teal-deep);}
-  .pill.active{
-    background:var(--teal-deep);
-    border-color:var(--teal-deep);
-    color:#fff;
-  }
-
-  /* ---------- HERO STRIP ---------- */
-  .hero{
-    max-width:1500px; margin:0 auto;
-    padding:34px 28px 10px;
-  }
-  .hero h1{
-    font-size:clamp(28px, 4vw, 44px);
-    font-weight:600;
-    margin:0 0 6px;
-    line-height:1.15;
-  }
-  .hero p{
-    margin:0; color:#5b5a53; font-size:15px; max-width:560px;
-  }
-  .hero .tape{
-    display:inline-block;
-    background:var(--mustard);
-    color:var(--teal-deep);
-    font-family:'IBM Plex Mono',monospace;
-    font-size:11.5px; font-weight:500;
-    padding:3px 10px;
-    transform:rotate(-2deg);
-    margin-bottom:10px;
-    box-shadow:1px 2px 0 rgba(0,0,0,.08);
-  }
-
-  /* ---------- MASONRY GRID ---------- */
-  main{
-    max-width:1500px; margin:0 auto;
-    padding:18px 22px 80px;
-  }
-  .grid{
-    column-count:2;
-    column-gap:16px;
-  }
-  @media(min-width:560px){ .grid{column-count:3;} }
-  @media(min-width:820px){ .grid{column-count:4;} }
-  @media(min-width:1120px){ .grid{column-count:5;} }
-  @media(min-width:1400px){ .grid{column-count:6;} }
-
-  .card{
-    break-inside:avoid;
-    margin-bottom:16px;
-    position:relative;
-    border-radius:14px;
-    overflow:hidden;
-    background:var(--paper-2);
-    box-shadow:var(--card-shadow);
-    cursor:pointer;
-    opacity:0;
-    animation:fadeIn .5s ease forwards;
-  }
-  @keyframes fadeIn{ to{opacity:1;} }
-  .card img{
-    width:100%; display:block;
-    aspect-ratio: var(--ar, 3/4);
-    object-fit:cover;
-    background:linear-gradient(120deg,#e8e4d8 25%,#f2efe6 37%,#e8e4d8 63%);
-    background-size:400% 100%;
-    animation:shimmer 1.4s infinite;
-  }
-  .card img.loaded{ animation:none; background:none; }
-  @keyframes shimmer{
-    0%{background-position:100% 0;}
-    100%{background-position:0 0;}
-  }
-  .card .tag{
-    position:absolute; top:10px; right:10px;
-    background:rgba(255,255,255,.92);
-    color:var(--teal-deep);
-    font-size:11px; font-weight:700;
-    padding:4px 10px;
-    border-radius:999px;
-    transform:rotate(-3deg);
-  }
-  .card .overlay{
-    position:absolute; inset:0;
-    background:linear-gradient(180deg, rgba(19,74,61,0) 55%, rgba(15,25,22,.72) 100%);
-    opacity:0;
-    transition:opacity .2s;
-    display:flex; align-items:flex-end;
-    padding:12px;
-  }
-  .card:hover .overlay{opacity:1;}
-  .card .overlay-title{
-    color:#fff; font-size:13px; font-weight:600;
-    line-height:1.3;
-  }
-  .card .save-btn{
-    position:absolute; top:10px; left:10px;
-    background:var(--teal);
-    color:#fff;
-    border:none;
-    border-radius:999px;
-    padding:8px 14px;
-    font-size:12.5px; font-weight:700;
-    font-family:'Manrope',sans-serif;
-    cursor:pointer;
-    opacity:0;
-    transform:translateY(-6px);
-    transition:all .18s;
-  }
-  .card:hover .save-btn{opacity:1; transform:translateY(0);}
-  .card .save-btn.saved{background:var(--mustard); color:var(--teal-deep);}
-
-  .loader{
-    text-align:center;
-    padding:40px 0;
-    color:#8a8878;
-    font-family:'IBM Plex Mono',monospace;
-    font-size:12.5px;
-  }
-  .loader .dot{
-    display:inline-block; width:6px; height:6px; border-radius:50%;
-    background:var(--teal); margin:0 3px;
-    animation:bounce 1s infinite;
-  }
-  .loader .dot:nth-child(2){animation-delay:.15s;}
-  .loader .dot:nth-child(3){animation-delay:.3s;}
-  @keyframes bounce{ 0%,80%,100%{transform:translateY(0); opacity:.4;} 40%{transform:translateY(-5px); opacity:1;} }
-
-  .empty{
-    text-align:center; padding:80px 20px; color:#8a8878;
-  }
-  .empty-suggest{
-    display:flex; gap:8px; justify-content:center; flex-wrap:wrap;
-    margin-top:18px;
-  }
-  .empty-suggest button{
-    padding:8px 16px; border-radius:999px; border:1.5px solid var(--line);
-    background:#fff; font-size:13px; font-weight:600; cursor:pointer; color:var(--teal-deep);
-  }
-  .empty-suggest button:hover{border-color:var(--teal);}
-
-  /* ---------- MODAL ---------- */
-  .modal-bg{
-    position:fixed; inset:0; background:rgba(19,22,20,.7);
-    display:none; align-items:center; justify-content:center;
-    z-index:200; padding:24px;
-  }
-  .modal-bg.open{display:flex;}
-  .modal{
-    background:#fff; border-radius:18px; overflow:hidden;
-    max-width:920px; width:100%; max-height:88vh;
-    display:flex; flex-wrap:wrap;
-    box-shadow:0 30px 60px rgba(0,0,0,.35);
-  }
-  .modal img{
-    width:100%; max-width:480px; object-fit:cover; display:block;
-    max-height:88vh;
-  }
-  .modal-side{
-    flex:1; min-width:260px; padding:26px;
-    display:flex; flex-direction:column; gap:14px;
-  }
-  .modal-title{font-size:22px; font-weight:600;}
-  .modal-tag{
-    align-self:flex-start;
-    background:var(--paper-2); color:var(--teal-deep);
-    padding:5px 12px; border-radius:999px; font-size:12px; font-weight:700;
-  }
-  .modal-desc{color:#5b5a53; font-size:14px; line-height:1.6;}
-  .modal-save{
-    margin-top:auto;
-    background:var(--teal-deep); color:#fff; border:none;
-    padding:13px; border-radius:12px; font-weight:700; font-size:14.5px;
-    cursor:pointer; font-family:'Manrope',sans-serif;
-  }
-  .modal-save.saved{background:var(--mustard); color:var(--teal-deep);}
-  .modal-close{
-    position:absolute; top:16px; left:16px;
-    background:rgba(255,255,255,.9); border:none;
-    width:34px; height:34px; border-radius:50%;
-    font-size:18px; cursor:pointer;
-  }
-  .modal{position:relative;}
-
-  ::selection{background:var(--mustard); color:var(--teal-deep);}
-</style>
-</head>
-<body>
-
-<header>
-  <div class="topbar">
-    <div class="logo">m<span class="amp">&amp;</span>s</div>
-    <div class="search-wrap">
-      <input id="searchInput" type="text" placeholder="ابحث عن إلهام… طبيعة، عمارة، أزياء، طعام" />
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-    </div>
-    <div class="save-count">محفوظ: <b id="savedCount">0</b></div>
-  </div>
-  <nav class="cats" id="catsNav"></nav>
-</header>
-
-<div class="hero">
-  <div class="tape">صور بلا نهاية — تمرير مستمر</div>
-  <h1>لوحتك، بلا حدود</h1>
-  <p>اجمع كل ما يلهمك من الطبيعة إلى العمارة، من الطعام إلى الفن — كل ذلك في مكان واحد.</p>
-</div>
-
-<main>
-  <div class="grid" id="grid"></div>
-  <div class="loader" id="loader"><span class="dot"></span><span class="dot"></span><span class="dot"></span> جارٍ تحميل المزيد</div>
-  <div class="empty" id="emptyMsg" style="display:none;">
-    <div id="emptyText">لا نتائج مطابقة لبحثك</div>
-    <div class="empty-suggest" id="emptySuggest"></div>
-  </div>
-</main>
-
-<div class="modal-bg" id="modalBg">
-  <div class="modal">
-    <button class="modal-close" id="modalClose">✕</button>
-    <img id="modalImg" src="" alt="">
-    <div class="modal-side">
-      <span class="modal-tag" id="modalTag"></span>
-      <div class="modal-title" id="modalTitle"></div>
-      <div class="modal-desc" id="modalDesc"></div>
-      <button class="modal-save" id="modalSave">حفظ في اللوحة</button>
-    </div>
-  </div>
-</div>
-
-<script>
-/* ---------------- CATEGORIES ---------------- */
-const CATEGORIES = [
-  {key:"nature", label:"طبيعة", seed:"nature",
-    words:["جبل هادئ","غابة كثيفة","شروق الشمس","بحيرة صافية","وادٍ أخضر","شلال منعزل","حقل أزهار","غروب الشمس","نهر جبلي","سماء ملبدة"],
-    synonyms:["nature","طبيعة","جبل","mountain","غابة","forest","شجر","tree","بحيرة","lake","بحر","sea","سماء","sky","شلال","waterfall","وادي","valley","نهر","river","زهور","flower","شروق","sunrise","غروب","sunset","منظر طبيعي","landscape"]},
-  {key:"architecture", label:"عمارة", seed:"arch",
-    words:["واجهة معمارية","سلم حلزوني","مبنى زجاجي","تفاصيل معمارية","خط أفق المدينة","قوس حجري","برج شاهق","نافذة كلاسيكية","ممر مقنطر","جسر معلق"],
-    synonyms:["architecture","عمارة","مبنى","building","بيت","house","برج","tower","جسر","bridge","مدينة","city","شارع","street","نافذة","window","سلم","stairs","قصر","palace","مسجد","mosque","كنيسة","church"]},
-  {key:"fashion", label:"أزياء", seed:"fashion",
-    words:["إطلالة أنيقة","تنسيق خريفي","إكسسوارات مختارة","نمط الشارع","ألوان الموسم","حذاء كلاسيكي","حقيبة يد","نظارة شمسية","معطف شتوي","فستان صيفي"],
-    synonyms:["fashion","أزياء","ملابس","clothes","حذاء","shoes","حقيبة","bag","نظارة","glasses","فستان","dress","موضة","style","إكسسوارات","accessories","عطر","perfume","مجوهرات","jewelry"]},
-  {key:"food", label:"طعام", seed:"food",
-    words:["طبق شهي","نكهات منزلية","مائدة دافئة","حلوى فاخرة","وصفة سريعة","قهوة الصباح","خبز طازج","سلطة صحية","حساء دافئ","فطور شهي"],
-    synonyms:["food","طعام","أكل","اكل","وجبة","meal","قهوة","coffee","حلوى","dessert","cake","كيك","خبز","bread","فطور","breakfast","عشاء","dinner","سلطة","salad","مطبخ","kitchen","وصفة","recipe","فواكه","fruit"]},
-  {key:"travel", label:"سفر", seed:"travel",
-    words:["وجهة الحلم","طريق مفتوح","مدينة عتيقة","شاطئ منعزل","رحلة استكشاف","مطار دولي","خريطة سفر","حقيبة سفر","فندق فاخر","قارب شراعي"],
-    synonyms:["travel","سفر","رحلة","trip","شاطئ","beach","فندق","hotel","مطار","airport","خريطة","map","جزيرة","island","صحراء","desert","استكشاف","explore","سياحة","tourism"]},
-  {key:"art", label:"فن", seed:"art",
-    words:["لوحة تجريدية","خط فني","نحت معاصر","ألوان مائية","تركيب بصري","رسم بالفحم","فن الشارع","معرض فني","تصميم جرافيك","خزف يدوي"],
-    synonyms:["art","فن","رسم","painting","لوحة","canvas","نحت","sculpture","خط عربي","calligraphy","ألوان","colors","تصميم","design","معرض","gallery","جرافيك","graphic"]},
-  {key:"tech", label:"تقنية", seed:"tech",
-    words:["تصميم مستقبلي","واجهة أنيقة","إضاءة رقمية","أدوات ذكية","تفاصيل دقيقة","لوحة مفاتيح","حاسوب محمول","هاتف ذكي","دائرة إلكترونية","روبوت آلي"],
-    synonyms:["tech","technology","تقنية","تكنولوجيا","حاسوب","computer","لابتوب","laptop","هاتف","phone","روبوت","robot","ذكاء اصطناعي","ai","برمجة","code","شاشة","screen"]},
-  {key:"animals", label:"حيوانات", seed:"animals",
-    words:["كائن بري","لحظة عفوية","في موطنه الطبيعي","تفاصيل نادرة","حركة حيوية","قط منزلي","كلب وفي","طائر مهاجر","حصان أصيل","أسد ملكي"],
-    synonyms:["animals","حيوانات","حيوان","animal","قطة","cat","كلب","dog","طائر","bird","أسد","lion","حصان","horse","سمك","fish","حديقة حيوان","zoo"]},
-  {key:"fitness", label:"رياضة", seed:"fitness",
-    words:["طاقة الصباح","تمرين مركّز","لياقة يومية","توازن وقوة","نمط نشط","جري صباحي","يوغا هادئة","رفع أثقال","سباحة منتظمة","دراجة هوائية"],
-    synonyms:["fitness","رياضة","تمرين","exercise","جري","running","يوغا","yoga","أثقال","weights","سباحة","swimming","دراجة","bike","صحة","health","جيم","gym"]},
-  {key:"interior", label:"ديكور", seed:"interior",
-    words:["ركن هادئ","تصميم دافئ","مساحة بسيطة","ضوء طبيعي","تفاصيل منزلية","غرفة معيشة","مطبخ عصري","غرفة نوم","حديقة منزلية","إضاءة دافئة"],
-    synonyms:["interior","ديكور","منزل","home","غرفة","room","أثاث","furniture","مطبخ","kitchen","غرفة نوم","bedroom","غرفة معيشة","living room","تصميم داخلي","design"]},
-];
-const BATCH_SIZE = 28;
-
-let activeCat = "all";
-let searchTerm = "";
-let savedIds = new Set();
-
-/* ---- infinite generation state ---- */
-let activeCats = [];          // categories currently matching filter/search
-let catCursor = 0;            // round-robin pointer into activeCats
-let counters = {};            // per-category generation index, grows forever
-
-function seededRand(seed){
-  let x = Math.sin(seed) * 10000;
-  return x - Math.floor(x);
-}
-
-function buildItem(cat, i){
-  const gid = i; // unique per category+index, unbounded
-  const ar = [ [3,4],[1,1],[4,5],[2,3],[3,2] ][Math.floor(seededRand(gid + cat.key.length*7919)*5)];
-  return {
-    id: cat.key + "-" + i,
-    cat: cat.key,
-    catLabel: cat.label,
-    title: cat.words[i % cat.words.length] + " #" + (i+1),
-    seed: cat.seed + "-" + i,
-    arW: ar[0], arH: ar[1]
-  };
-}
-
-/* normalize: lowercase + strip Arabic diacritics/alef variants for forgiving matching */
-function normalize(str){
-  return str
-    .toLowerCase()
-    .replace(/[\u064B-\u0652]/g,"")      // diacritics
-    .replace(/[إأآا]/g,"ا")
-    .replace(/ى/g,"ي")
-    .replace(/ة/g,"ه")
-    .trim();
-}
-
-/* which categories match current filter (activeCat) + free-text search */
-function computeActiveCategories(){
-  let cats = CATEGORIES;
-  if(activeCat !== "all"){
-    cats = cats.filter(c => c.key === activeCat);
-  }
-  if(searchTerm){
-    const n = normalize(searchTerm);
-    cats = cats.filter(cat=>{
-      if(normalize(cat.label).includes(n)) return true;
-      if(cat.synonyms.some(s => normalize(s).includes(n) || n.includes(normalize(s)))) return true;
-      if(cat.words.some(w => normalize(w).includes(n))) return true;
-      return false;
-    });
-  }
-  return cats;
-}
-
-/* ---------------- NAV PILLS ---------------- */
-const catsNav = document.getElementById('catsNav');
-function renderPills(){
-  catsNav.innerHTML = "";
-  const allPill = document.createElement('button');
-  allPill.className = 'pill active';
-  allPill.textContent = 'الكل';
-  allPill.onclick = ()=> selectCat('all', allPill);
-  catsNav.appendChild(allPill);
-  CATEGORIES.forEach(cat=>{
-    const p = document.createElement('button');
-    p.className = 'pill';
-    p.textContent = cat.label;
-    p.onclick = ()=> selectCat(cat.key, p);
-    catsNav.appendChild(p);
-  });
-}
-function selectCat(key, el){
-  activeCat = key;
-  [...catsNav.children].forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
-  resetGrid();
-}
-renderPills();
-
-/* ---------------- SEARCH ---------------- */
-const searchInput = document.getElementById('searchInput');
-let searchTimer;
-searchInput.addEventListener('input', e=>{
-  clearTimeout(searchTimer);
-  searchTimer = setTimeout(()=>{
-    searchTerm = e.target.value.trim();
-    resetGrid();
-  }, 200);
-});
-searchInput.addEventListener('keydown', e=>{
-  if(e.key === 'Enter'){
-    clearTimeout(searchTimer);
-    searchTerm = e.target.value.trim();
-    resetGrid();
-  }
-});
-
-/* ---------------- GRID RENDER ---------------- */
-const grid = document.getElementById('grid');
-const loader = document.getElementById('loader');
-const emptyMsg = document.getElementById('emptyMsg');
-
-function resetGrid(){
-  grid.innerHTML = "";
-  activeCats = computeActiveCategories();
-  catCursor = 0;
-  counters = {};
-  activeCats.forEach(c => counters[c.key] = 0);
-  const hasResults = activeCats.length > 0;
-  emptyMsg.style.display = hasResults ? 'none' : 'block';
-  loader.style.display = hasResults ? 'block' : 'none';
-  if(!hasResults){
-    document.getElementById('emptyText').textContent =
-      searchTerm ? `لا نتائج لـ "${searchTerm}" — جرّب إحدى الفئات التالية:` : 'لا نتائج مطابقة';
-    const sugg = document.getElementById('emptySuggest');
-    sugg.innerHTML = "";
-    CATEGORIES.forEach(cat=>{
-      const b = document.createElement('button');
-      b.textContent = cat.label;
-      b.onclick = ()=>{
-        searchInput.value = "";
-        searchTerm = "";
-        activeCat = cat.key;
-        [...catsNav.children].forEach(c=>c.classList.remove('active'));
-        [...catsNav.children].find(c=>c.textContent===cat.label)?.classList.add('active');
-        resetGrid();
-      };
-      sugg.appendChild(b);
-    });
-  }
-  loadMore();
-}
-
-function makeCard(item){
-  const card = document.createElement('div');
-  card.className = 'card';
-  card.style.setProperty('--ar', `${item.arW}/${item.arH}`);
-
-  const img = document.createElement('img');
-  img.loading = 'lazy';
-  img.alt = item.title;
-  img.src = `https://picsum.photos/seed/${item.seed}/${item.arW*160}/${item.arH*160}`;
-  img.onload = ()=> img.classList.add('loaded');
-  img.onerror = ()=> { img.classList.add('loaded'); img.style.background = '#e2ded1'; };
-
-  const tag = document.createElement('div');
-  tag.className = 'tag';
-  tag.textContent = item.catLabel;
-
-  const overlay = document.createElement('div');
-  overlay.className = 'overlay';
-  const ot = document.createElement('div');
-  ot.className = 'overlay-title';
-  ot.textContent = item.title;
-  overlay.appendChild(ot);
-
-  const saveBtn = document.createElement('button');
-  saveBtn.className = 'save-btn';
-  saveBtn.textContent = savedIds.has(item.id) ? '✓ محفوظ' : 'حفظ';
-  if(savedIds.has(item.id)) saveBtn.classList.add('saved');
-  saveBtn.onclick = (e)=>{
-    e.stopPropagation();
-    toggleSave(item.id, saveBtn);
-  };
-
-  card.appendChild(img);
-  card.appendChild(tag);
-  card.appendChild(overlay);
-  card.appendChild(saveBtn);
-  card.onclick = ()=> openModal(item, img.src);
-  return card;
-}
-
-function toggleSave(id, btn){
-  if(savedIds.has(id)){
-    savedIds.delete(id);
-    if(btn){ btn.textContent='حفظ'; btn.classList.remove('saved'); }
-  } else {
-    savedIds.add(id);
-    if(btn){ btn.textContent='✓ محفوظ'; btn.classList.add('saved'); }
-  }
-  document.getElementById('savedCount').textContent = savedIds.size;
-}
-
-function loadMore(){
-  if(activeCats.length === 0){
-    loader.style.display = 'none';
-    return;
-  }
-  loader.style.display = 'block';
-  for(let n=0; n<BATCH_SIZE; n++){
-    const cat = activeCats[catCursor % activeCats.length];
-    const i = counters[cat.key]++;
-    const item = buildItem(cat, i);
-    grid.appendChild(makeCard(item));
-    catCursor++;
-  }
-  // infinite: never stops, loader stays visible to keep triggering more
-}
-
-/* infinite scroll */
-const sentinelObserver = new IntersectionObserver(entries=>{
-  entries.forEach(en=>{ if(en.isIntersecting) loadMore(); });
-}, {rootMargin:'800px'});
-sentinelObserver.observe(loader);
-
-/* ---------------- MODAL ---------------- */
-const modalBg = document.getElementById('modalBg');
-const modalImg = document.getElementById('modalImg');
-const modalTitle = document.getElementById('modalTitle');
-const modalTag = document.getElementById('modalTag');
-const modalDesc = document.getElementById('modalDesc');
-const modalSave = document.getElementById('modalSave');
-let currentModalItem = null;
-
-function openModal(item, src){
-  currentModalItem = item;
-  modalImg.src = src.replace(/\/\d+\/\d+$/, `/${item.arW*240}/${item.arH*240}`);
-  modalTitle.textContent = item.title;
-  modalTag.textContent = item.catLabel;
-  modalDesc.textContent = `من مجموعة ${item.catLabel} — جزء من مجموعة صور لا نهائية على m&s.`;
-  modalSave.textContent = savedIds.has(item.id) ? '✓ محفوظة في لوحتك' : 'حفظ في اللوحة';
-  modalSave.classList.toggle('saved', savedIds.has(item.id));
-  modalBg.classList.add('open');
-}
-modalSave.onclick = ()=>{
-  toggleSave(currentModalItem.id);
-  modalSave.textContent = savedIds.has(currentModalItem.id) ? '✓ محفوظة في لوحتك' : 'حفظ في اللوحة';
-  modalSave.classList.toggle('saved', savedIds.has(currentModalItem.id));
-  const liveBtn = [...grid.children].find(c => c.querySelector('img').alt === currentModalItem.title);
-  if(liveBtn){
-    const b = liveBtn.querySelector('.save-btn');
-    b.textContent = savedIds.has(currentModalItem.id) ? '✓ محفوظ' : 'حفظ';
-    b.classList.toggle('saved', savedIds.has(currentModalItem.id));
-  }
-};
-document.getElementById('modalClose').onclick = ()=> modalBg.classList.remove('open');
-modalBg.onclick = (e)=>{ if(e.target === modalBg) modalBg.classList.remove('open'); };
-document.addEventListener('keydown', e=>{ if(e.key==='Escape') modalBg.classList.remove('open'); });
-
-/* ---------------- INIT ---------------- */
-resetGrid();
-</script>
-</body>
-</html>
-
